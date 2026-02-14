@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (for future use)
+  postgres:
+    image: postgres:16-alpine
+    container_name: reposa-db
+    environment:
+      POSTGRES_USER: reposa
+      POSTGRES_PASSWORD: reposa_password
+      POSTGRES_DB: reposa
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reposa"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Reposa Backend (commented out for now, will be added when Dockerfile is ready)
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: reposa-backend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     PORT: 3000
+  #     GITHUB_TOKEN: ${GITHUB_TOKEN}
+  #     DATABASE_URL: postgres://reposa:reposa_password@postgres:5432/reposa
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+
+volumes:
+  postgres_data:
