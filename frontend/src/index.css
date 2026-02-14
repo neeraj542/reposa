@@ -9,13 +9,45 @@
 
 @layer base {
   :root {
+    /* Kubernetes-Inspired Professional Color System - Light Theme (Default) */
+    --text-primary: #18181b;
+    --text-secondary: #52525b;
+    --text-tertiary: #a1a1aa;
+    --bg-primary: #ffffff;
+    --bg-secondary: #fafafa;
+    --bg-tertiary: #f4f4f5;
+    --border-primary: #e4e4e7;
+
+    /* Kubernetes Blue Palette - Light Mode */
+    --k8s-blue: #326CE5;
+    --k8s-blue-light: #4285F4;
+    --k8s-blue-dark: #1A4D9E;
+    --accent-blue: #3B82F6;
+
+    /* Simplified Gradients - Light Mode */
+    --gradient-primary: linear-gradient(135deg, #326CE5 0%, #4285F4 100%);
+    --gradient-subtle: linear-gradient(135deg, rgba(50, 108, 229, 0.03) 0%, rgba(66, 133, 244, 0.03) 100%);
+
+    /* Clean Borders - Light Mode - More Visible */
+    --border-hover: rgba(59, 130, 246, 0.2);
+    --border-focus: #326CE5;
+
+    /* Zinc/Cal Theme Colors */
+    --zinc-50: #fafafa;
+    --zinc-100: #f4f4f5;
+    --zinc-200: #e4e4e7;
+    --zinc-800: #27272a;
+    --zinc-900: #18181b;
+  }
+
+  [data-theme='dark'] {
     /* Kubernetes-Inspired Professional Color System - Dark Theme */
-    --bg-primary: #0A0E14;
-    --bg-secondary: #151B23;
-    --bg-tertiary: #1E2530;
-    --text-primary: #FFFFFF;
-    --text-secondary: #9CA3AF;
-    --text-tertiary: #6B7280;
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #18181b;
+    --bg-tertiary: #27272a;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --text-tertiary: #71717a;
 
     /* Kubernetes Blue Palette - Minimalist */
     --k8s-blue: #326CE5;
@@ -276,5 +308,81 @@
     50% {
       background-position: 100% 50%;
     }
+  }
+
+  @keyframes light-wave {
+    0% {
+      transform: translateX(-100%) skewX(-15deg);
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+
+    100% {
+      transform: translateX(100%) skewX(-15deg);
+      opacity: 0;
+    }
+  }
+
+  .animate-light-wave {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animate-light-wave::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.05) 45%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.05) 55%,
+        transparent 100%);
+    animation: light-wave 3s infinite linear;
+    pointer-events: none;
+  }
+
+  .dark .animate-light-wave::after {
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(50, 108, 229, 0.05) 45%,
+        rgba(50, 108, 229, 0.15) 50%,
+        rgba(50, 108, 229, 0.05) 55%,
+        transparent 100%);
+  }
+
+  @keyframes scan-line {
+    0% {
+      transform: translateY(-100%);
+    }
+
+    100% {
+      transform: translateY(200%);
+    }
+  }
+
+  .animate-scan {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animate-scan::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, transparent, var(--k8s-blue), transparent);
+    animation: scan-line 2s infinite ease-in-out;
+    opacity: 0.2;
+    z-index: 10;
+    pointer-events: none;
   }
 }

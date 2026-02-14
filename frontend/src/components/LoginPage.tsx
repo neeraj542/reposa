@@ -3,19 +3,19 @@ import { FiArrowLeft, FiGithub } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { useTheme } from '../contexts/ThemeContext';
 
-interface SignupPageProps {
+interface LoginPageProps {
     onBack: () => void;
-    onLogin: () => void;
+    onSignup: () => void;
 }
 
-const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
     const { theme } = useTheme();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Signup attempt:', { email, password });
+        console.log('Login attempt:', { email, password });
     };
 
     return (
@@ -37,18 +37,18 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gray-50 dark:bg-white/5 mb-6">
                         <img src="/st1.svg" alt="Reposa" className="w-6 h-6" style={{ filter: theme === 'light' ? 'brightness(0.8)' : 'none' }} />
                     </div>
-                    <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white tracking-tight">Create your account</h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Start your open source journey today</p>
+                    <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white tracking-tight">Welcome back</h1>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Please enter your details to sign in</p>
                 </div>
 
                 <div className="space-y-4 mb-8">
                     <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-200 dark:border-white/10 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 group">
                         <FcGoogle className="text-xl" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">Sign up with Google</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">Log in with Google</span>
                     </button>
                     <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-200 dark:border-white/10 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 group">
                         <FiGithub className="text-xl text-black dark:text-white" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">Sign up with GitHub</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">Log in with GitHub</span>
                     </button>
                 </div>
 
@@ -86,12 +86,12 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
                         type="submit"
                         className="w-full py-3.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-sm font-semibold hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg shadow-black/5 dark:shadow-white/5"
                     >
-                        Get Started
+                        Log in
                     </button>
                 </form>
 
                 <p className="mt-8 text-center text-xs text-gray-500 dark:text-gray-400">
-                    Already have an account? <button onClick={onLogin} className="text-black dark:text-white font-medium hover:underline">Log in</button>
+                    Don't have an account? <button onClick={onSignup} className="text-black dark:text-white font-medium hover:underline">Sign up</button>
                 </p>
             </div>
 
@@ -101,4 +101,4 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
     );
 };
 
-export default SignupPage;
+export default LoginPage;

@@ -8,10 +8,16 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/joho/godotenv"
 	"github.com/neeraj542/reposa/internal/api"
 )
 
 func main() {
+	// Load environment variables from .env file
+	if err := godotenv.Load(); err != nil {
+		log.Printf("Warning: .env file not found or unable to load: %v", err)
+	}
+
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
 		AppName: "Reposa v1.0.0",

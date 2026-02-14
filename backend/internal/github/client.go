@@ -63,8 +63,12 @@ func ParseRepoURL(url string) (owner, repo string, err error) {
 
 // GetRepository fetches repository information
 func (c *Client) GetRepository(owner, repo string) (*github.Repository, error) {
-	repository, _, err := c.client.Repositories.Get(c.ctx, owner, repo)
+	repository, resp, err := c.client.Repositories.Get(c.ctx, owner, repo)
 	if err != nil {
+		// Check for rate limiting
+		if resp != nil && resp.StatusCode == 403 {
+			return nil, fmt.Errorf("rate_limit_exceeded: GitHub API rate limit exceeded")
+		}
 		return nil, fmt.Errorf("failed to fetch repository: %w", err)
 	}
 	return repository, nil
@@ -84,6 +88,14 @@ func (c *Client) GetIssues(owner, repo string) ([]*github.Issue, error) {
 	for {
 		issues, resp, err := c.client.Issues.ListByRepo(c.ctx, owner, repo, opts)
 		if err != nil {
+			// Check for rate limiting
+			if resp != nil && resp.StatusCode == 403 {
+				return nil, fmt.Errorf("rate_limit_exceeded: GitHub API rate limit exceeded")
+			}
+			// Check if issues are disabled (HTTP 410 Gone)
+			if resp != nil && resp.StatusCode == 410 {
+				return []*github.Issue{}, nil
+			}
 			return nil, fmt.Errorf("failed to fetch issues: %w", err)
 		}
 

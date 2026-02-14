@@ -1,14 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import type { Issue } from '../types';
 import { FiFilter, FiX } from 'react-icons/fi';
 import FilterDropdown from './FilterDropdown';
 
 interface FilterBarProps {
     issues: Issue[];
+    languages: string[];
     onFilterChange: (filtered: Issue[]) => void;
 }
 
-const FilterBar: React.FC<FilterBarProps> = ({ issues, onFilterChange }) => {
+const FilterBar: React.FC<FilterBarProps> = ({ issues, languages: availableLanguages, onFilterChange }) => {
     const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([]);
     const [selectedType, setSelectedType] = useState<string[]>([]);
     const [selectedSpecial, setSelectedSpecial] = useState<string[]>([]);
@@ -17,19 +18,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ issues, onFilterChange }) => {
     const difficulties = ['easy', 'medium', 'hard'];
     const types = ['bug', 'feature', 'docs', 'enhancement'];
     const specialOptions = ['good first', 'has mentor'];
-
-    // Extract unique languages from all issues
-    const availableLanguages = useMemo(() => {
-        const languageSet = new Set<string>();
-        issues.forEach(issue => {
-            // Access repository languages through the issue's repository
-            const repository = (issue as any).repository;
-            if (repository && repository.languages) {
-                repository.languages.forEach((lang: string) => languageSet.add(lang));
-            }
-        });
-        return Array.from(languageSet).sort();
-    }, [issues]);
 
     const applyFilters = (
         diff: string[],
@@ -103,31 +91,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ issues, onFilterChange }) => {
         selectedLanguages.length > 0;
 
     return (
-        <div style={{ marginBottom: '1.5rem' }}>
-            {/* Filter Header */}
-            <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                    <FiFilter className="text-sm" style={{ color: 'var(--text-tertiary)' }} />
-                    <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
+        <div className="flex flex-col gap-3">
+            {/* Filter Dropdowns & Clear Controls */}
+            <div className="flex flex-wrap items-center gap-3" style={{ position: 'relative' }}>
+                <div className="flex items-center gap-2 mr-2">
+                    <FiFilter className="text-xs text-zinc-400" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
                         Filters
                     </span>
                 </div>
-                {hasActiveFilters && (
-                    <button
-                        onClick={clearFilters}
-                        className="text-xs transition-colors flex items-center gap-1"
-                        style={{ color: 'var(--text-tertiary)' }}
-                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
-                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-tertiary)'}
-                    >
-                        <FiX className="text-sm" />
-                        Clear all
-                    </button>
-                )}
-            </div>
 
-            {/* Filter Dropdowns */}
-            <div className="flex flex-wrap items-center gap-2" style={{ position: 'relative' }}>
                 <FilterDropdown
                     label="Difficulty"
                     options={difficulties}
@@ -152,6 +125,16 @@ const FilterBar: React.FC<FilterBarProps> = ({ issues, onFilterChange }) => {
                     selected={selectedSpecial}
                     onChange={handleSpecialChange}
                 />
+
+                {hasActiveFilters && (
+                    <button
+                        onClick={clearFilters}
+                        className="ml-auto text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500 transition-colors flex items-center gap-1 pl-4"
+                    >
+                        <FiX className="text-xs" />
+                        Clear
+                    </button>
+                )}
             </div>
         </div>
     );

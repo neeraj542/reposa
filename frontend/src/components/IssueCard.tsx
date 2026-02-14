@@ -18,111 +18,53 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, repository }) => {
 
     return (
         <div
-            className="issue-card-clotributor"
-            style={{
-                border: '1px solid #e9ecef',
-                borderRadius: '0px',
-                background: 'var(--bg-secondary)',
-                transition: 'box-shadow 0.2s',
-                overflow: 'hidden'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)'}
-            onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
+            className="group bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:shadow-md transition-all duration-200 overflow-hidden rounded-md"
         >
-            <div style={{ display: 'flex', minHeight: '140px' }}>
+            <div className="flex flex-col sm:flex-row min-h-[140px]">
                 {/* Left Sidebar - Project Branding (20%) */}
                 <div
-                    style={{
-                        width: '20%',
-                        minWidth: '160px',
-                        borderRight: '1px solid #e9ecef',
-                        padding: '1rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: 'var(--bg-tertiary)'
-                    }}
+                    className="w-full sm:w-[20%] sm:min-w-[160px] bg-zinc-50 dark:bg-zinc-900/50 border-b sm:border-b-0 sm:border-r border-zinc-200 dark:border-zinc-800 p-4 flex flex-col items-center gap-2"
                 >
                     {/* Project Logo */}
                     <img
                         src={avatarUrl}
                         alt={repository.owner}
-                        style={{
-                            width: '48px',
-                            height: '48px',
-                            borderRadius: '4px',
-                            border: '1px solid var(--border-primary)',
-                            objectFit: 'cover'
-                        }}
+                        className="w-12 h-12 rounded-lg border border-zinc-200 dark:border-zinc-700 object-cover bg-white dark:bg-zinc-800"
                         onError={(e) => {
-                            // Fallback to placeholder if image fails to load
                             e.currentTarget.style.display = 'none';
                         }}
                     />
 
                     {/* Project Name */}
-                    <div style={{ textAlign: 'center', width: '100%' }}>
-                        <div
-                            style={{
-                                fontSize: '12px',
-                                fontWeight: '600',
-                                color: 'var(--text-primary)',
-                                marginBottom: '0.25rem',
-                                wordBreak: 'break-word'
-                            }}
-                        >
+                    <div className="text-center w-full">
+                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 mb-1 break-words">
                             {repository.name}
                         </div>
                     </div>
 
                     {/* Badges */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', width: '100%' }}>
+                    <div className="flex flex-col gap-1.5 w-full mt-1">
                         {issue.difficulty && (
-                            <span
-                                style={{
-                                    background: 'rgba(50, 108, 229, 0.1)',
-                                    color: '#326CE5',
-                                    border: '1px solid rgba(50, 108, 229, 0.2)',
-                                    padding: '3px 10px',
-                                    fontSize: '10px',
-                                    fontWeight: '600',
-                                    textTransform: 'uppercase',
-                                    borderRadius: '0px',
-                                    textAlign: 'center'
-                                }}
-                            >
+                            <span className="bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase text-center rounded-[3px]">
                                 {issue.difficulty}
                             </span>
                         )}
                         {issue.type && (
-                            <span
-                                style={{
-                                    background: 'rgba(20, 184, 166, 0.1)',
-                                    color: '#14B8A6',
-                                    border: '1px solid rgba(20, 184, 166, 0.2)',
-                                    padding: '3px 10px',
-                                    fontSize: '10px',
-                                    fontWeight: '600',
-                                    textTransform: 'uppercase',
-                                    borderRadius: '0px',
-                                    textAlign: 'center'
-                                }}
-                            >
+                            <span className="bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase text-center rounded-[3px]">
                                 {issue.type}
                             </span>
                         )}
                     </div>
 
                     {/* Metadata Icons */}
-                    <div style={{ marginTop: 'auto', display: 'flex', gap: '0.5rem', fontSize: '10px', color: 'var(--text-tertiary)', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <div className="mt-auto flex flex-wrap justify-center gap-2 text-[10px] text-zinc-500 dark:text-zinc-400">
                         {issue.is_good_first && (
-                            <span title="Good First Issue" style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                            <span title="Good First Issue" className="flex items-center gap-1">
                                 ✓ First
                             </span>
                         )}
                         {issue.has_mentor && (
-                            <span title="Has Mentor" style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                            <span title="Has Mentor" className="flex items-center gap-1">
                                 👤 Mentor
                             </span>
                         )}
@@ -130,49 +72,31 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, repository }) => {
                 </div>
 
                 {/* Right Content - Issue Details (80%) */}
-                <div style={{ flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column' }}>
+                <div className="flex-1 p-4 flex flex-col">
                     {/* Top Row - Repo Info */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
                             <a
                                 href={repository.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    fontSize: '12px',
-                                    fontWeight: '600',
-                                    color: 'var(--text-primary)',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '3px'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.color = '#326CE5'}
-                                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                                className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 transition-colors"
                             >
                                 {repository.full_name}
-                                <FiExternalLink style={{ fontSize: '10px' }} />
+                                <FiExternalLink className="text-[10px]" />
                             </a>
-                            <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                                <FiStar style={{ fontSize: '10px' }} />
+                            <span className="text-[11px] text-zinc-500 flex items-center gap-1">
+                                <FiStar className="text-[10px]" />
                                 {repository.stars >= 1000 ? `${(repository.stars / 1000).toFixed(1)}k` : repository.stars}
                             </span>
                         </div>
 
                         {/* Language Labels */}
-                        <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
+                        <div className="flex gap-1.5 flex-wrap">
                             {repository.languages.slice(0, 3).map((lang) => (
                                 <span
                                     key={lang}
-                                    style={{
-                                        background: 'rgba(147, 51, 234, 0.1)',
-                                        color: '#9333EA',
-                                        border: '1px solid rgba(147, 51, 234, 0.2)',
-                                        padding: '2px 6px',
-                                        fontSize: '9px',
-                                        fontWeight: '600',
-                                        borderRadius: '0px'
-                                    }}
+                                    className="bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-500/20 px-1.5 py-0.5 text-[9px] font-semibold rounded-[3px]"
                                 >
                                     {lang}
                                 </span>
@@ -181,14 +105,12 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, repository }) => {
                     </div>
 
                     {/* Middle Row - Issue Title */}
-                    <h3 style={{ margin: '0.375rem 0', fontSize: '1rem', fontWeight: '600', lineHeight: '1.3', color: 'var(--text-primary)' }}>
+                    <h3 className="my-1.5 text-base font-semibold leading-snug text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                         <a
                             href={issue.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ color: 'inherit', textDecoration: 'none' }}
-                            onMouseEnter={(e) => e.currentTarget.style.color = '#326CE5'}
-                            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                            className="block"
                         >
                             {issue.title}
                         </a>
@@ -196,9 +118,9 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, repository }) => {
 
 
                     {/* Bottom Row - Metadata */}
-                    <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '11px', color: 'var(--text-tertiary)', flexWrap: 'wrap' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                            <FiClock style={{ fontSize: '10px' }} />
+                    <div className="mt-auto flex items-center gap-3 text-[11px] text-zinc-500 dark:text-zinc-400 flex-wrap pt-2">
+                        <span className="flex items-center gap-1">
+                            <FiClock className="text-[10px]" />
                             {formatDate(issue.updated_at)} • #{issue.number}
                         </span>
 
@@ -206,16 +128,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, repository }) => {
                         {issue.labels.slice(0, 3).map((label, idx) => (
                             <span
                                 key={idx}
-                                style={{
-                                    background: 'rgba(0, 0, 0, 0.05)',
-                                    color: '#6B7280',
-                                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                                    padding: '2px 6px',
-                                    fontSize: '9px',
-                                    fontWeight: '600',
-                                    borderRadius: '0px',
-                                    textTransform: 'uppercase'
-                                }}
+                                className="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 px-1.5 py-0.5 text-[9px] font-semibold uppercase rounded-[3px]"
                             >
                                 {label}
                             </span>
@@ -227,4 +140,4 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, repository }) => {
     );
 };
 
-export default IssueCard;
+export default React.memo(IssueCard);

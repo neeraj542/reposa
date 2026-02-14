@@ -43,40 +43,31 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ label, options, selecte
                 onClick={() => setIsOpen(!isOpen)}
                 className="dropdown-button"
                 style={{
-                    background: '#f8f9fa',
-                    border: '1px solid #ced4da',
-                    borderRadius: '0px',
-                    padding: '8px 16px',
+                    background: 'var(--bg-white)',
+                    border: '1px solid var(--border-zinc-200)',
+                    borderRadius: '8px',
+                    padding: '6px 12px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    fontSize: '13px',
-                    fontWeight: '500',
+                    gap: '6px',
+                    fontSize: '11px',
+                    fontWeight: '600',
                     cursor: 'pointer',
-                    color: 'var(--text-primary)',
-                    transition: 'all 0.2s'
+                    color: 'var(--text-zinc-600)',
+                    transition: 'all 0.1s',
+                    position: 'relative',
+                    zIndex: isOpen ? 1002 : 1,
+                    boxShadow: '0 1px 1px rgba(0,0,0,0.02)'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#e9ecef'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#f8f9fa'}
             >
-                {label}
-                {selected.length > 0 && (
-                    <span style={{
-                        background: '#326CE5',
-                        color: 'white',
-                        borderRadius: '10px',
-                        padding: '2px 6px',
-                        fontSize: '10px',
-                        fontWeight: '600',
-                        minWidth: '18px',
-                        textAlign: 'center'
-                    }}>
-                        {selected.length}
-                    </span>
-                )}
+                <span className="text-zinc-400 dark:text-zinc-500 font-medium">{label}:</span>
+                <span className="text-zinc-900 dark:text-zinc-100">
+                    {selected.length === 0 ? 'All' : selected.length === 1 ? selected[0] : `${selected.length} selected`}
+                </span>
                 <FiChevronDown
+                    className="text-zinc-400"
                     style={{
-                        marginLeft: 'auto',
+                        marginLeft: '4px',
                         transition: 'transform 0.2s',
                         transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                     }}
