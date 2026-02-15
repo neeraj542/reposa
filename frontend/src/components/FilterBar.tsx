@@ -45,7 +45,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ issues, languages: availableLangu
 
         if (languages.length > 0) {
             filtered = filtered.filter((issue) => {
-                const repository = (issue as any).repository;
+                const repository = (issue as Issue & { repository?: { languages: string[] } }).repository;
                 if (repository && repository.languages) {
                     return repository.languages.some((lang: string) => languages.includes(lang));
                 }

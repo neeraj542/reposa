@@ -55,13 +55,13 @@ function App() {
       ]);
 
       setAnalysis(result);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Analysis error:', err);
 
       if (err instanceof CustomApiError) {
         setError({
-          type: err.errorType as any,
-          message: err.userMessage
+          type: (err as CustomApiError).errorType as 'repo_not_found' | 'no_issues' | 'no_beginner_issues' | 'api_error' | 'network_error' | null,
+          message: (err as CustomApiError).userMessage
         });
       } else {
         setError({
@@ -229,7 +229,7 @@ function App() {
                   className="max-w-4xl mx-auto p-12 rounded-[32px] text-center shadow-sm relative overflow-hidden animate-scan"
                   style={{
                     background: theme === 'dark' ? '#18181b' : '#ffffff',
-                    boxShadow: theme === 'dark' ? '0 4px 24px rgba(0,0,0,0.2)' : '0 4px 24px rgba(0,0,0,0.06)'
+                    boxShadow: theme === 'dark' ? '0 4px 24px rgba(0,0,0,0.2)' : '0 44px 24px rgba(0,0,0,0.06)'
                   }}
                 >
                   <div className="relative z-10">

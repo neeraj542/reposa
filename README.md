@@ -29,8 +29,9 @@ Reposa analyzes GitHub repositories on-demand to help developers find great oppo
 - **PostgreSQL** - Robust data storage
 - **GitHub API** - Official GitHub integration
 
-### Frontend (Coming Soon)
-- **React + TypeScript** - Modern, type-safe UI
+### Frontend
+- **React 19 + TypeScript** - Modern, type-safe UI
+- **Vitest + RTL** - Modern testing suite
 - **Vite** - Lightning-fast build tool
 - **Tailwind CSS** - Beautiful, responsive design
 
@@ -135,9 +136,17 @@ reposa/
 ## Development
 
 ### Running Tests
+
+#### Backend
 ```bash
 cd backend
 go test ./...
+```
+
+#### Frontend
+```bash
+cd frontend
+npm test
 ```
 
 ### Linting
@@ -164,13 +173,14 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for de
 ## Roadmap
 
 - [x] Project setup and architecture
-- [ ] Core GitHub API integration
-- [ ] Issue analysis engine
-- [ ] REST API endpoints
-- [ ] Database integration
-- [ ] Caching layer
-- [ ] Frontend UI
-- [ ] Search functionality
+- [x] Core GitHub API integration
+- [x] Issue analysis engine
+- [x] REST API endpoints
+- [x] Database integration
+- [x] Caching layer
+- [x] Frontend UI
+- [x] Search functionality
+- [x] Testing foundation
 - [ ] Docker deployment
 - [ ] CI/CD pipeline
 

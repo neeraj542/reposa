@@ -42,7 +42,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({ repositoryName }) => {
             clearInterval(progressInterval);
             clearInterval(messageInterval);
         };
-    }, []);
+    }, [messages.length]);
 
     return (
         <div className="animate-fade-in w-full max-w-2xl mx-auto py-2">

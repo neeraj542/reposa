@@ -59,6 +59,9 @@ npm run preview
 
 # Lint code
 npm run lint
+
+# Run tests
+npm test
 ```
 
 ## Project Structure

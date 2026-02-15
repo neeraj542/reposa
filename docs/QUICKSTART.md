@@ -47,6 +47,16 @@ curl -X POST http://localhost:3000/api/analyze \
   -d '{"repo_url": "https://github.com/golang/go"}'
 ```
 
+## Testing
+
+```bash
+# Test backend
+cd backend && go test ./...
+
+# Test frontend
+cd frontend && npm test
+```
+
 ## API Endpoints
 
 | Method | Endpoint | Description |

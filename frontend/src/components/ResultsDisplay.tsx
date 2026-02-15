@@ -36,7 +36,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ analysis, onBack }) => 
     const paginatedIssues = searchedIssues.slice(startIndex, endIndex);
 
     // Reset to page 1 when filters or search changes
-    useMemo(() => {
+    React.useEffect(() => {
         setCurrentPage(1);
     }, [searchedIssues.length, itemsPerPage]);
 
