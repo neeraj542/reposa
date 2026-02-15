@@ -43,21 +43,21 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ label, options, selecte
                 onClick={() => setIsOpen(!isOpen)}
                 className="dropdown-button"
                 style={{
-                    background: 'var(--bg-white)',
-                    border: '1px solid var(--border-zinc-200)',
-                    borderRadius: '8px',
-                    padding: '6px 12px',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-primary)',
+                    borderRadius: '12px',
+                    padding: '8px 14px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '11px',
+                    gap: '8px',
+                    fontSize: '12px',
                     fontWeight: '600',
                     cursor: 'pointer',
-                    color: 'var(--text-zinc-600)',
-                    transition: 'all 0.1s',
+                    color: 'var(--text-primary)',
+                    transition: 'all 0.2s',
                     position: 'relative',
                     zIndex: isOpen ? 1002 : 1,
-                    boxShadow: '0 1px 1px rgba(0,0,0,0.02)'
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                 }}
             >
                 <span className="text-zinc-400 dark:text-zinc-500 font-medium">{label}:</span>
