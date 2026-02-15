@@ -176,7 +176,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ analysis, onBack }) => 
             {/* Statistics Section - Optimized Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
                 <div className="p-3 sm:p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-all flex flex-col items-center justify-center">
-                    <div className="text-xl sm:text-2xl font-bold mb-1 font-mono tracking-tighter" style={{ color: 'var(--text-primary)' }}>{stats.total_issues}</div>
+                    <div className="text-xl sm:text-2xl font-bold mb-1 font-mono tracking-tighter text-zinc-900 dark:text-zinc-100">{stats.total_issues}</div>
                     <div className="text-[9px] sm:text-[10px] text-zinc-500 font-bold uppercase tracking-widest text-center">Total Issues</div>
                 </div>
                 <div className="p-3 sm:p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-emerald-500/20 transition-all flex flex-col items-center justify-center">

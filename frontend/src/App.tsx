@@ -281,7 +281,7 @@ function App() {
               <div className="max-w-6xl mx-auto mb-24 animate-fade-in" style={{ animationDelay: '200ms' }}>
                 <div className="p-8 rounded-[32px] border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm flex flex-col md:flex-row items-center justify-between gap-8">
                   <div className="text-left flex-1">
-                    <h3 className="text-2xl font-bold mb-2 tracking-tight">Support the Mission</h3>
+                    <h3 className="text-2xl font-bold mb-2 tracking-tight text-zinc-900 dark:text-zinc-100">Support the Mission</h3>
                     <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-md">
                       Reposa is open source. Star us on GitHub or sponsor the project to help us scan thousands of more repos.
                     </p>
@@ -312,7 +312,7 @@ function App() {
               {/* Testimonials Section - Cal.com Style */}
               <section className="max-w-7xl mx-auto px-4 sm:px-8 py-24 border-t border-zinc-100 dark:border-zinc-900">
                 <div className="text-center mb-16">
-                  <h2 className="text-3xl font-bold mb-4 tracking-tight">Loved by the Community</h2>
+                  <h2 className="text-3xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">Loved by the Community</h2>
                   <p className="text-zinc-500 dark:text-zinc-400 text-sm">Helping thousands of developers find their first contribution.</p>
                 </div>
                 <div className="grid md:grid-cols-3 gap-6">
@@ -341,7 +341,7 @@ function App() {
                       <div className="flex items-center gap-3 border-t border-zinc-50 dark:border-zinc-800/50 pt-6">
                         <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center font-bold text-[10px] text-zinc-500">{t.avatar}</div>
                         <div className="text-left">
-                          <p className="text-sm font-bold">{t.name}</p>
+                          <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{t.name}</p>
                           <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t.role}</p>
                         </div>
                       </div>
@@ -352,7 +352,7 @@ function App() {
 
               {/* Feature Grid - Cards */}
               <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold mb-4 tracking-tight">Powerful Features</h2>
+                <h2 className="text-3xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">Powerful Features</h2>
                 <p className="text-zinc-500 dark:text-zinc-400 text-sm">Everything you need to find and manage your open source contributions.</p>
               </div>
               <div id="features" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -411,8 +411,8 @@ function App() {
         !analysis && !loading && !error && (
           <section id="benefits" className="max-w-7xl mx-auto px-4 sm:px-8 py-24">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4 tracking-tight">
-                Why Reposa?
+              <h2 className="text-3xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">
+                Sync with Reposa
               </h2>
               <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                 Stop wasting hours hunting for good first issues. We do the heavy lifting so you can focus on coding.
@@ -451,7 +451,7 @@ function App() {
         !analysis && !loading && !error && (
           <section id="use-cases" className="max-w-7xl mx-auto px-4 sm:px-8 py-24 pb-32">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4 tracking-tight">
+              <h2 className="text-3xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">
                 Perfect For Everyone
               </h2>
               <p className="text-zinc-500 dark:text-zinc-400 text-sm">
