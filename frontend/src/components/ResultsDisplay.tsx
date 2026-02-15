@@ -210,7 +210,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ analysis, onBack }) => 
                 </div>
             </div>
 
-            <div className="sticky top-[72px] sm:top-[80px] z-40 py-2 sm:py-3 px-2 -mx-2 backdrop-blur-xl bg-gray-50/80 dark:bg-black/80 border-y border-zinc-200/50 dark:border-zinc-800/80 overflow-visible">
+            <div className="hidden sm:block sticky top-[72px] sm:top-[80px] z-40 py-2 sm:py-3 px-2 -mx-2 backdrop-blur-xl bg-gray-50/80 dark:bg-black/80 border-y border-zinc-200/50 dark:border-zinc-800/80 overflow-visible">
                 <FilterBar issues={issues} languages={repository.languages} onFilterChange={setFilteredIssues} />
             </div>
 
