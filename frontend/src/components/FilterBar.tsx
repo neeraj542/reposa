@@ -94,7 +94,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ issues, languages: availableLangu
         <div className="flex flex-col gap-3">
             {/* Filter Dropdowns & Clear Controls */}
             {/* Filter Dropdowns & Clear Controls */}
-            <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar pb-1 sm:pb-0" style={{ position: 'relative' }}>
+            <div className="flex items-center gap-2 sm:gap-3 pb-1 sm:pb-0">
                 <div className="flex items-center gap-2 mr-1 sm:mr-2 flex-shrink-0">
                     <FiFilter className="text-[10px] text-zinc-400" />
                     <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
