@@ -93,43 +93,46 @@ const FilterBar: React.FC<FilterBarProps> = ({ issues, languages: availableLangu
     return (
         <div className="flex flex-col gap-3">
             {/* Filter Dropdowns & Clear Controls */}
-            <div className="flex flex-wrap items-center gap-3" style={{ position: 'relative' }}>
-                <div className="flex items-center gap-2 mr-2">
-                    <FiFilter className="text-xs text-zinc-400" />
+            {/* Filter Dropdowns & Clear Controls */}
+            <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar pb-1 sm:pb-0" style={{ position: 'relative' }}>
+                <div className="flex items-center gap-2 mr-1 sm:mr-2 flex-shrink-0">
+                    <FiFilter className="text-[10px] text-zinc-400" />
                     <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
                         Filters
                     </span>
                 </div>
 
-                <FilterDropdown
-                    label="Difficulty"
-                    options={difficulties}
-                    selected={selectedDifficulty}
-                    onChange={handleDifficultyChange}
-                />
-                <FilterDropdown
-                    label="Type"
-                    options={types}
-                    selected={selectedType}
-                    onChange={handleTypeChange}
-                />
-                <FilterDropdown
-                    label="Language"
-                    options={availableLanguages}
-                    selected={selectedLanguages}
-                    onChange={handleLanguageChange}
-                />
-                <FilterDropdown
-                    label="Special"
-                    options={specialOptions}
-                    selected={selectedSpecial}
-                    onChange={handleSpecialChange}
-                />
+                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3">
+                    <FilterDropdown
+                        label="Difficulty"
+                        options={difficulties}
+                        selected={selectedDifficulty}
+                        onChange={handleDifficultyChange}
+                    />
+                    <FilterDropdown
+                        label="Type"
+                        options={types}
+                        selected={selectedType}
+                        onChange={handleTypeChange}
+                    />
+                    <FilterDropdown
+                        label="Language"
+                        options={availableLanguages}
+                        selected={selectedLanguages}
+                        onChange={handleLanguageChange}
+                    />
+                    <FilterDropdown
+                        label="Special"
+                        options={specialOptions}
+                        selected={selectedSpecial}
+                        onChange={handleSpecialChange}
+                    />
+                </div>
 
                 {hasActiveFilters && (
                     <button
                         onClick={clearFilters}
-                        className="ml-auto text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500 transition-colors flex items-center gap-1 pl-4"
+                        className="ml-2 sm:ml-auto text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500 transition-colors flex items-center gap-1 pl-2 sm:pl-4 flex-shrink-0"
                     >
                         <FiX className="text-xs" />
                         Clear

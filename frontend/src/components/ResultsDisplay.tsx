@@ -99,7 +99,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ analysis, onBack }) => 
             <div className="flex items-center justify-between pb-2">
                 <button
                     onClick={onBack}
-                    className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full transition-all duration-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    className="flex items-center gap-2 text-sm font-semibold px-4 py-3 sm:py-2 rounded-xl sm:rounded-full transition-all duration-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 sm:border-transparent active:scale-95"
                     style={{ color: 'var(--text-secondary)' }}
                 >
                     <FiChevronLeft className="text-lg" />
@@ -108,28 +108,30 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ analysis, onBack }) => 
             </div>
 
             {/* Repository Header */}
-            <div className="glass-card p-6 sm:p-8 animate-light-wave">
-                <div className="flex items-start justify-between gap-4 mb-6">
-                    <div className="flex-1">
-                        <h2 className="text-xl sm:text-2xl font-bold mb-3 tracking-tight" style={{ color: 'var(--text-primary)' }}>
+            <div className="glass-card p-4 sm:p-8">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-4 mb-4 sm:mb-6">
+                    <div className="flex-1 min-w-0">
+                        <h2 className="text-xl sm:text-2xl font-bold mb-2 tracking-tight line-clamp-1" style={{ color: 'var(--text-primary)' }}>
                             <a
                                 href={repository.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="hover:text-blue-400 transition-colors"
+                                className="hover:text-blue-500 transition-colors"
                             >
                                 {repository.full_name}
                             </a>
                         </h2>
-                        <p className="mb-6 leading-relaxed text-sm sm:text-base" style={{ color: 'var(--text-secondary)' }}>{repository.description}</p>
+                        <p className="mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base line-clamp-2 sm:line-clamp-none" style={{ color: 'var(--text-secondary)' }}>
+                            {repository.description}
+                        </p>
 
-                        <div className="flex flex-wrap gap-4 sm:gap-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                            <span className="flex items-center gap-2">
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs sm:text-sm" style={{ color: 'var(--text-secondary)' }}>
+                            <span className="flex items-center gap-2 whitespace-nowrap">
                                 <FiStar className="text-yellow-500" />
                                 <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>{repository.stars.toLocaleString()}</span> stars
                             </span>
-                            <span className="flex items-center gap-2">
-                                <FiGitBranch style={{ color: 'var(--text-tertiary)' }} />
+                            <span className="flex items-center gap-2 whitespace-nowrap">
+                                <FiGitBranch className="text-zinc-400" />
                                 <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>{repository.forks.toLocaleString()}</span> forks
                             </span>
                         </div>
@@ -143,9 +145,9 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ analysis, onBack }) => 
                             <FiCode className="text-sm" style={{ color: 'var(--text-tertiary)' }} />
                             <span className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>Languages</span>
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
                             {repository.languages.map((lang) => (
-                                <span key={lang} className="badge bg-blue-500/15 text-blue-300 ring-1 ring-blue-500/20">
+                                <span key={lang} className="badge bg-blue-500/15 text-blue-500 dark:text-blue-300 ring-1 ring-blue-500/20 text-[10px] sm:text-xs">
                                     {lang}
                                 </span>
                             ))}
@@ -171,46 +173,46 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ analysis, onBack }) => 
                 )}
             </div>
 
-            {/* Statistics Section - Cal.com style */}
-            <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-                <div className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-all flex flex-col items-center justify-center">
-                    <div className="text-3xl font-bold mb-1 font-mono tracking-tighter" style={{ color: 'var(--text-primary)' }}>{stats.total_issues}</div>
-                    <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest text-center">Total Issues</div>
+            {/* Statistics Section - Optimized Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                <div className="p-3 sm:p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-all flex flex-col items-center justify-center">
+                    <div className="text-xl sm:text-2xl font-bold mb-1 font-mono tracking-tighter" style={{ color: 'var(--text-primary)' }}>{stats.total_issues}</div>
+                    <div className="text-[9px] sm:text-[10px] text-zinc-500 font-bold uppercase tracking-widest text-center">Total Issues</div>
                 </div>
-                <div className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-emerald-500/20 transition-all flex flex-col items-center justify-center">
-                    <div className="text-3xl font-bold text-emerald-500 dark:text-emerald-400 mb-1 font-mono tracking-tighter">{stats.good_first_issues}</div>
-                    <div className="text-[10px] text-zinc-500 font-bold flex items-center gap-1 uppercase tracking-widest text-center">
-                        <FiCheckCircle className="text-xs" />
+                <div className="p-3 sm:p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-emerald-500/20 transition-all flex flex-col items-center justify-center">
+                    <div className="text-xl sm:text-2xl font-bold text-emerald-500 dark:text-emerald-400 mb-1 font-mono tracking-tighter">{stats.good_first_issues}</div>
+                    <div className="text-[9px] sm:text-[10px] text-zinc-500 font-bold flex items-center gap-1 uppercase tracking-widest text-center">
+                        <FiCheckCircle className="text-[10px] sm:text-xs" />
                         Good First
                     </div>
                 </div>
-                <div className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-violet-500/20 transition-all flex flex-col items-center justify-center">
-                    <div className="text-3xl font-bold text-violet-500 dark:text-violet-400 mb-1 font-mono tracking-tighter">{stats.help_wanted_issues}</div>
-                    <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest text-center">Help Wanted</div>
+                <div className="p-3 sm:p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-violet-500/20 transition-all flex flex-col items-center justify-center">
+                    <div className="text-xl sm:text-2xl font-bold text-violet-500 dark:text-violet-400 mb-1 font-mono tracking-tighter">{stats.help_wanted_issues}</div>
+                    <div className="text-[9px] sm:text-[10px] text-zinc-500 font-bold uppercase tracking-widest text-center">Help Wanted</div>
                 </div>
-                <div className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-rose-500/20 transition-all flex flex-col items-center justify-center">
-                    <div className="text-3xl font-bold text-rose-500 dark:text-rose-400 mb-1 font-mono tracking-tighter">{stats.bug_issues}</div>
-                    <div className="text-[10px] text-zinc-500 font-bold flex items-center gap-1 uppercase tracking-widest text-center">
-                        <FiAlertCircle className="text-xs" />
+                <div className="p-3 sm:p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-rose-500/20 transition-all flex flex-col items-center justify-center">
+                    <div className="text-xl sm:text-2xl font-bold text-rose-500 dark:text-rose-400 mb-1 font-mono tracking-tighter">{stats.bug_issues}</div>
+                    <div className="text-[9px] sm:text-[10px] text-zinc-500 font-bold flex items-center gap-1 uppercase tracking-widest text-center">
+                        <FiAlertCircle className="text-[10px] sm:text-xs" />
                         Bugs
                     </div>
                 </div>
-                <div className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-blue-500/20 transition-all flex flex-col items-center justify-center">
-                    <div className="text-3xl font-bold text-blue-500 dark:text-blue-400 mb-1 font-mono tracking-tighter">{stats.feature_issues}</div>
-                    <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest text-center">Features</div>
+                <div className="p-3 sm:p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-blue-500/20 transition-all flex flex-col items-center justify-center">
+                    <div className="text-xl sm:text-2xl font-bold text-blue-500 dark:text-blue-400 mb-1 font-mono tracking-tighter">{stats.feature_issues}</div>
+                    <div className="text-[9px] sm:text-[10px] text-zinc-500 font-bold uppercase tracking-widest text-center">Features</div>
                 </div>
-                <div className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-amber-500/20 transition-all flex flex-col items-center justify-center">
-                    <div className="text-3xl font-bold text-amber-500 dark:text-amber-400 mb-1 font-mono tracking-tighter">{stats.docs_issues}</div>
-                    <div className="text-[10px] text-zinc-500 font-bold flex items-center gap-1 uppercase tracking-widest text-center">
-                        <FiFileText className="text-xs" />
+                <div className="p-3 sm:p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:border-amber-500/20 transition-all flex flex-col items-center justify-center">
+                    <div className="text-xl sm:text-2xl font-bold text-amber-500 dark:text-amber-400 mb-1 font-mono tracking-tighter">{stats.docs_issues}</div>
+                    <div className="text-[9px] sm:text-[10px] text-zinc-500 font-bold flex items-center gap-1 uppercase tracking-widest text-center">
+                        <FiFileText className="text-[10px] sm:text-xs" />
                         Docs
                     </div>
                 </div>
             </div>
 
             {/* Optimized Sticky Filter Section */}
-            <div className="sticky top-[68px] z-40 py-4 px-2 -mx-2 backdrop-blur-xl bg-gray-50/80 dark:bg-black/60 border-y border-zinc-200/50 dark:border-zinc-800/50">
-                <div className="max-w-full overflow-visible">
+            <div className="sticky top-[72px] sm:top-[80px] z-40 py-2 sm:py-3 px-2 -mx-2 backdrop-blur-xl bg-gray-50/80 dark:bg-black/80 border-y border-zinc-200/50 dark:border-zinc-800/80">
+                <div className="max-w-full overflow-x-auto no-scrollbar">
                     <FilterBar issues={issues} languages={repository.languages} onFilterChange={setFilteredIssues} />
                 </div>
             </div>
@@ -233,12 +235,12 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ analysis, onBack }) => 
                     </h3>
 
                     {/* Per Page Selector */}
-                    <div className="flex items-center gap-2">
-                        <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Show:</span>
+                    <div className="flex items-center gap-2 ml-auto sm:ml-0">
+                        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-zinc-400">Show:</span>
                         <select
                             value={itemsPerPage}
                             onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-                            className="px-3 py-1.5 border rounded-md text-xs outline-none transition-all"
+                            className="px-3 py-1.5 border rounded-lg text-xs outline-none transition-all cursor-pointer hover:border-blue-500/50"
                             style={{
                                 background: 'var(--bg-tertiary)',
                                 borderColor: 'var(--border-primary)',
