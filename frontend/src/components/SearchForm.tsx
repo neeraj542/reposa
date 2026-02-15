@@ -12,9 +12,16 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading, renderLoadin
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (repoUrl.trim()) {
-            onSearch(repoUrl.trim());
+        const trimmedUrl = repoUrl.trim();
+        if (!trimmedUrl) return;
+
+        // Simple validation
+        if (!trimmedUrl.toLowerCase().includes('github.com')) {
+            alert('Please enter a valid GitHub repository URL');
+            return;
         }
+
+        onSearch(trimmedUrl);
     };
 
     const handleExampleClick = (repo: string) => {
@@ -36,7 +43,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading, renderLoadin
             <form onSubmit={handleSubmit} className={loading ? 'mb-4' : 'mb-8'}>
                 <div className="relative group">
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="relative flex items-center gap-3">
+                    <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <div className="flex-1 relative">
                             <FiSearch
                                 className="absolute left-5 top-1/2 transform -translate-y-1/2 text-lg text-gray-400"
@@ -46,7 +53,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading, renderLoadin
                                 value={repoUrl}
                                 onChange={(e) => setRepoUrl(e.target.value)}
                                 placeholder="https://github.com/owner/repo"
-                                className="w-full pl-14 pr-5 py-5 rounded-xl text-base transition-all duration-300 focus:ring-2 outline-none font-medium"
+                                className="w-full pl-14 pr-12 sm:pr-5 py-4 sm:py-5 rounded-xl text-sm sm:text-base transition-all duration-300 focus:ring-2 outline-none font-medium"
                                 style={{
                                     background: 'var(--bg-tertiary)',
                                     color: 'var(--text-primary)',
@@ -69,7 +76,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading, renderLoadin
                         <button
                             type="submit"
                             disabled={loading || !repoUrl.trim()}
-                            className="px-8 py-5 rounded-xl font-semibold text-base transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+                            className="px-8 py-4 sm:py-5 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 whitespace-nowrap"
                             style={{
                                 background: loading || !repoUrl.trim() ? 'var(--bg-secondary)' : 'var(--bg-tertiary)',
                                 color: loading || !repoUrl.trim() ? 'var(--text-tertiary)' : 'var(--text-primary)',
@@ -83,7 +90,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading, renderLoadin
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                     </svg>
-                                    <span className="hidden sm:inline">Scanning...</span>
+                                    <span>Scanning...</span>
                                 </>
                             ) : (
                                 <>
@@ -107,7 +114,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading, renderLoadin
                     <p className="text-xs font-semibold uppercase tracking-wider mb-6 text-gray-500 dark:text-gray-400 text-left">
                         Popular picks
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                         {exampleRepos.map((repo) => (
                             <button
                                 key={repo.name}

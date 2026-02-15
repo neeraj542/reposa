@@ -8,8 +8,9 @@ import LoadingState from './components/LoadingState';
 
 import { api, CustomApiError } from './api/client';
 import type { Analysis } from './types';
-import { FiGithub, FiSun, FiMoon, FiClock, FiTarget, FiUsers, FiTrendingUp, FiCode, FiBook, FiZap } from 'react-icons/fi';
+import { FiGithub, FiSun, FiMoon, FiClock, FiTarget, FiUsers, FiTrendingUp, FiCode, FiBook, FiZap, FiMenu } from 'react-icons/fi';
 import { useTheme } from './contexts/ThemeContext';
+import MobileMenu from './components/MobileMenu';
 import './index.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
     message: string;
   } | null>(null);
   const [currentRepoName, setCurrentRepoName] = useState<string>('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
@@ -167,7 +169,7 @@ function App() {
               {/* Get Started CTA */}
               <button
                 onClick={() => setView('signup')}
-                className="px-5 py-2 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
+                className="hidden sm:block px-5 py-2 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
                 style={{
                   background: '#000000',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
@@ -175,10 +177,36 @@ function App() {
               >
                 Get Started
               </button>
+
+              {/* Hamburger Menu Mobile */}
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="lg:hidden p-2 rounded-full transition-colors duration-200"
+                style={{
+                  background: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                  color: theme === 'dark' ? '#ffffff' : '#000000'
+                }}
+                aria-label="Open menu"
+              >
+                <FiMenu className="text-xl" />
+              </button>
             </div>
           </nav>
         </div>
       </header>
+
+      {/* Mobile Navigation Backdrop & Overlay */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        onNavigate={(id) => {
+          if (id === 'signup') {
+            setView('signup');
+          } else {
+            scrollToSection(id);
+          }
+        }}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex-grow">
@@ -226,17 +254,17 @@ function App() {
 
                 {/* Hero Single Card */}
                 <div
-                  className="max-w-4xl mx-auto p-12 rounded-[32px] text-center shadow-sm relative overflow-hidden animate-scan"
+                  className="max-w-4xl mx-auto p-6 sm:p-12 rounded-[24px] sm:rounded-[32px] text-center shadow-sm relative overflow-hidden"
                   style={{
                     background: theme === 'dark' ? '#18181b' : '#ffffff',
                     boxShadow: theme === 'dark' ? '0 4px 24px rgba(0,0,0,0.2)' : '0 44px 24px rgba(0,0,0,0.06)'
                   }}
                 >
                   <div className="relative z-10">
-                    <h1 className="text-5xl sm:text-6xl font-bold mb-6 tracking-tight text-gray-900 dark:text-white">
-                      Drop a Repo, Get the Goods
+                    <h1 className="text-3xl sm:text-6xl font-extrabold mb-6 tracking-tight text-gray-900 dark:text-white leading-[1.1]">
+                      Drop a Repo, <br className="sm:hidden" /> Get the Goods
                     </h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
                       Paste any GitHub repo and we'll dig up every beginner-friendly issue worth tackling
                     </p>
 
@@ -323,10 +351,14 @@ function App() {
               </section>
 
               {/* Feature Grid - Cards */}
+              <div className="text-center mb-16">
+                <h2 className="text-3xl font-bold mb-4 tracking-tight">Powerful Features</h2>
+                <p className="text-zinc-500 dark:text-zinc-400 text-sm">Everything you need to find and manage your open source contributions.</p>
+              </div>
               <div id="features" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {/* Card 1 */}
                 <div
-                  className="p-8 text-left transition-all duration-300 hover:scale-[1.02] cursor-default bg-white dark:bg-zinc-900 rounded-[24px] shadow-sm border border-black/5 dark:border-white/10 group animate-light-wave"
+                  className="p-8 text-left transition-all duration-300 hover:scale-[1.02] cursor-default bg-white dark:bg-zinc-900 rounded-[24px] shadow-sm border border-black/5 dark:border-white/10 group"
                 >
                   <div className="w-14 h-14 mb-6 rounded-2xl flex items-center justify-center bg-gray-50 dark:bg-zinc-800 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
                     <FiClock className="text-2xl text-black dark:text-white group-hover:text-white dark:group-hover:text-black transition-colors duration-300" />
@@ -341,7 +373,7 @@ function App() {
 
                 {/* Card 2 */}
                 <div
-                  className="p-8 text-left transition-all duration-300 hover:scale-[1.02] cursor-default bg-white dark:bg-zinc-900 rounded-[24px] shadow-sm border border-black/5 dark:border-white/10 group animate-light-wave"
+                  className="p-8 text-left transition-all duration-300 hover:scale-[1.02] cursor-default bg-white dark:bg-zinc-900 rounded-[24px] shadow-sm border border-black/5 dark:border-white/10 group"
                 >
                   <div className="w-14 h-14 mb-6 rounded-2xl flex items-center justify-center bg-gray-50 dark:bg-zinc-800 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
                     <FiTarget className="text-2xl text-black dark:text-white group-hover:text-white dark:group-hover:text-black transition-colors duration-300" />
@@ -356,7 +388,7 @@ function App() {
 
                 {/* Card 3 */}
                 <div
-                  className="p-8 text-left sm:col-span-2 lg:col-span-1 transition-all duration-300 hover:scale-[1.02] cursor-default bg-white dark:bg-zinc-900 rounded-[24px] shadow-sm border border-black/5 dark:border-white/10 group animate-light-wave"
+                  className="p-8 text-left sm:col-span-2 lg:col-span-1 transition-all duration-300 hover:scale-[1.02] cursor-default bg-white dark:bg-zinc-900 rounded-[24px] shadow-sm border border-black/5 dark:border-white/10 group"
                 >
                   <div className="w-14 h-14 mb-6 rounded-2xl flex items-center justify-center bg-gray-50 dark:bg-zinc-800 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
                     <FiTrendingUp className="text-2xl text-black dark:text-white group-hover:text-white dark:group-hover:text-black transition-colors duration-300" />
@@ -379,10 +411,10 @@ function App() {
         !analysis && !loading && !error && (
           <section id="benefits" className="max-w-7xl mx-auto px-4 sm:px-8 py-24">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6 text-black dark:text-white tracking-tight">
+              <h2 className="text-3xl font-bold mb-4 tracking-tight">
                 Why Reposa?
               </h2>
-              <p className="text-lg max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                 Stop wasting hours hunting for good first issues. We do the heavy lifting so you can focus on coding.
               </p>
             </div>
@@ -419,10 +451,10 @@ function App() {
         !analysis && !loading && !error && (
           <section id="use-cases" className="max-w-7xl mx-auto px-4 sm:px-8 py-24 pb-32">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6 text-black dark:text-white tracking-tight">
+              <h2 className="text-3xl font-bold mb-4 tracking-tight">
                 Perfect For Everyone
               </h2>
-              <p className="text-lg max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                 Whether you're just starting out or a seasoned pro, Reposa helps you contribute smarter.
               </p>
             </div>
