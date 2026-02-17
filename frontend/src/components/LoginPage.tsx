@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FiArrowLeft, FiGithub } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LoginPageProps {
     onBack: () => void;
@@ -10,12 +10,13 @@ interface LoginPageProps {
 
 const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
     const { theme } = useTheme();
+    const { loginWithGithub } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Login attempt:', { email, password });
+        alert('Email login coming soon! Please use GitHub for now.');
     };
 
     return (
@@ -41,18 +42,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
                     <p className="text-sm text-gray-500 dark:text-gray-400">Please enter your details to sign in</p>
                 </div>
 
-                <div className="space-y-4 mb-8">
-                    <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-200 dark:border-white/10 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 group">
-                        <FcGoogle className="text-xl" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">Log in with Google</span>
-                    </button>
-                    <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-200 dark:border-white/10 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 group">
-                        <FiGithub className="text-xl text-black dark:text-white" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">Log in with GitHub</span>
-                    </button>
-                </div>
+                <button
+                    onClick={loginWithGithub}
+                    className="w-full flex items-center justify-center gap-3 px-4 py-4 border border-gray-200 dark:border-white/10 rounded-xl hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-200 group bg-white dark:bg-white/5"
+                >
+                    <FiGithub className="text-xl" />
+                    <span className="text-sm font-bold">Continue with GitHub</span>
+                </button>
 
-                <div className="relative mb-8">
+                <div className="relative my-8">
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-100 dark:border-white/10"></div>
                     </div>

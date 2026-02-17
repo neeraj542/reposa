@@ -10,6 +10,7 @@ import { api, CustomApiError } from './api/client';
 import type { Analysis } from './types';
 import { FiGithub, FiSun, FiMoon, FiClock, FiTarget, FiUsers, FiTrendingUp, FiCode, FiBook, FiZap, FiMenu } from 'react-icons/fi';
 import { useTheme } from './contexts/ThemeContext';
+import { useAuth } from './contexts/AuthContext';
 import MobileMenu from './components/MobileMenu';
 import './index.css';
 
@@ -23,9 +24,12 @@ function App() {
   } | null>(null);
   const [currentRepoName, setCurrentRepoName] = useState<string>('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
 
   const resultsRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+  const { user, logout, loginWithGithub } = useAuth();
 
   // Smooth scroll function
   const scrollToSection = (id: string) => {
@@ -35,12 +39,29 @@ function App() {
     }
   };
 
-
+  // Handle outside click for dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsSignInOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSearch = async (repoUrl: string) => {
     setLoading(true);
     setError(null);
     setAnalysis(null);
+
+    if (!user) {
+      setView('login');
+      setLoading(false);
+      return;
+    }
+
+
 
     // Extract repo name for loading display
     const repoName = repoUrl.split('/').slice(-2).join('/');
@@ -166,17 +187,79 @@ function App() {
                 )}
               </button>
 
-              {/* Get Started CTA */}
-              <button
-                onClick={() => setView('signup')}
-                className="hidden sm:block px-5 py-2 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
-                style={{
-                  background: '#000000',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                }}
-              >
-                Get Started
-              </button>
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <img
+                    src={user.avatar_url}
+                    alt={user.username}
+                    className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10"
+                  />
+                  <button
+                    onClick={logout}
+                    className="hidden sm:block px-5 py-2 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
+                    style={{
+                      background: '#000000',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="relative" ref={dropdownRef}>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsSignInOpen(!isSignInOpen)}
+                      className="hidden sm:block px-4 py-2 text-sm font-medium transition-colors duration-200 hover:text-black dark:hover:text-white"
+                      style={{ color: theme === 'dark' ? '#999999' : '#666666' }}
+                    >
+                      Sign In
+                    </button>
+                    <button
+                      onClick={() => setView('signup')}
+                      className="hidden sm:block px-5 py-2 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
+                      style={{
+                        background: '#000000',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                      }}
+                    >
+                      Get Started
+                    </button>
+                  </div>
+
+                  {isSignInOpen && (
+                    <div
+                      className="absolute right-0 mt-3 w-56 rounded-2xl shadow-2xl overflow-hidden py-2 z-[60] border animate-in fade-in zoom-in duration-200 origin-top-right"
+                      style={{
+                        background: theme === 'dark' ? '#18181b' : '#ffffff',
+                        borderColor: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.3)'
+                      }}
+                    >
+
+                      <div className="px-4 py-2 border-b mb-1" style={{ borderColor: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
+                        <p className="text-[10px] uppercase tracking-widest font-bold text-gray-500">Sign in to Reposa</p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          loginWithGithub();
+                          setIsSignInOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/5 group"
+                        style={{ color: theme === 'dark' ? '#ffffff' : '#000000' }}
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-white/5 flex items-center justify-center group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                          <FiGithub className="text-lg" />
+                        </div>
+                        <div className="text-left">
+                          <p className="font-semibold">Continue with GitHub</p>
+                          <p className="text-[10px] text-gray-500">Fast & Secure</p>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Hamburger Menu Mobile */}
               <button
@@ -191,14 +274,15 @@ function App() {
                 <FiMenu className="text-xl" />
               </button>
             </div>
-          </nav>
-        </div>
-      </header>
+          </nav >
+        </div >
+      </header >
 
       {/* Mobile Navigation Backdrop & Overlay */}
-      <MobileMenu
+      < MobileMenu
         isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
+        onClose={() => setIsMobileMenuOpen(false)
+        }
         onNavigate={(id) => {
           if (id === 'signup') {
             setView('signup');

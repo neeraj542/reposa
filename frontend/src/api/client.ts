@@ -3,6 +3,8 @@ import type { Analysis } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
+axios.defaults.withCredentials = true;
+
 export interface ApiErrorResponse {
     error: string;
     error_type?: string;
