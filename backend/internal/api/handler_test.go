@@ -12,7 +12,7 @@ import (
 
 func TestGetHealth(t *testing.T) {
 	app := fiber.New()
-	handler := NewHandler()
+	handler := NewHandler(nil)
 	app.Get("/health", handler.GetHealth)
 
 	req := httptest.NewRequest("GET", "/health", nil)
@@ -39,7 +39,7 @@ func TestGetHealth(t *testing.T) {
 
 func TestAnalyzeRepository_InvalidRequest(t *testing.T) {
 	app := fiber.New()
-	handler := NewHandler()
+	handler := NewHandler(nil)
 	app.Post("/analyze", handler.AnalyzeRepository)
 
 	// Test with empty body
