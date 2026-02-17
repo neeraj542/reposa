@@ -10,16 +10,18 @@ import (
 	"github.com/neeraj542/reposa/internal/analyzer"
 	"github.com/neeraj542/reposa/internal/github"
 	"github.com/neeraj542/reposa/internal/models"
+	"github.com/neeraj542/reposa/internal/storage"
 )
 
 // Handler handles API requests
 type Handler struct {
 	githubClient *github.Client
 	analyzer     *analyzer.Analyzer
+	storage      *storage.Storage
 }
 
 // NewHandler creates a new API handler
-func NewHandler() *Handler {
+func NewHandler(s *storage.Storage) *Handler {
 	token := os.Getenv("GITHUB_TOKEN")
 	if token == "" {
 		log.Println("Warning: GITHUB_TOKEN not set. API rate limits will be restricted.")
@@ -28,6 +30,7 @@ func NewHandler() *Handler {
 	return &Handler{
 		githubClient: github.NewClient(token),
 		analyzer:     analyzer.NewAnalyzer(),
+		storage:      s,
 	}
 }
 
@@ -62,15 +65,26 @@ func (h *Handler) AnalyzeRepository(c *fiber.Ctx) error {
 		})
 	}
 
+	// Determine GitHub client to use (Personal token from session or default token)
+	ghClient := h.githubClient
+	userID := c.Locals("user_id")
+	if userID != nil {
+		user, err := h.storage.GetUserByID(userID.(uint))
+		if err == nil && user.GitHubToken != "" {
+			ghClient = github.NewClient(user.GitHubToken)
+			log.Printf("Using personal token for analysis of %s/%s by user %s", owner, repo, user.Username)
+		}
+	}
+
 	// Fetch repository information
-	repository, err := h.githubClient.GetRepository(owner, repo)
+	repository, err := ghClient.GetRepository(owner, repo)
 	if err != nil {
 		log.Printf("Repository fetch error: %v", err)
 		if strings.Contains(err.Error(), "rate_limit_exceeded") {
 			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
 				"error":      "GitHub API rate limit exceeded",
 				"error_type": "rate_limit",
-				"message":    "We've hit the GitHub API rate limit. Please try again later or configure a GITHUB_TOKEN.",
+				"message":    "We've hit the GitHub API rate limit. Please try again later or log in to use your personal token.",
 			})
 		}
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -90,7 +104,7 @@ func (h *Handler) AnalyzeRepository(c *fiber.Ctx) error {
 	}
 
 	// Fetch issues
-	issues, err := h.githubClient.GetIssues(owner, repo)
+	issues, err := ghClient.GetIssues(owner, repo)
 	if err != nil {
 		log.Printf("Issues fetch error: %v", err)
 		if strings.Contains(err.Error(), "rate_limit_exceeded") {
@@ -108,7 +122,7 @@ func (h *Handler) AnalyzeRepository(c *fiber.Ctx) error {
 	}
 
 	// Fetch languages
-	languages, err := h.githubClient.GetLanguages(owner, repo)
+	languages, err := ghClient.GetLanguages(owner, repo)
 	if err != nil {
 		log.Printf("Warning: Failed to fetch languages: %v", err)
 		languages = []string{}
