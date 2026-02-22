@@ -58,12 +58,20 @@ func (h *AuthHandler) GithubLogin(c *fiber.Ctx) error {
 	rand.Read(b)
 	state := base64.StdEncoding.EncodeToString(b)
 
+	isProd := os.Getenv("NODE_ENV") == "production"
+	sameSite := "Lax"
+	if isProd {
+		sameSite = "None"
+	}
+
 	c.Cookie(&fiber.Cookie{
 		Name:     "github_state",
 		Value:    state,
 		Expires:  time.Now().Add(15 * time.Minute),
 		HTTPOnly: true,
-		Secure:   os.Getenv("NODE_ENV") == "production",
+		Secure:   isProd,
+		SameSite: sameSite,
+		Path:     "/",
 	})
 
 	url := githubOAuthConfig.AuthCodeURL(state, oauth2.AccessTypeOffline)
@@ -143,14 +151,20 @@ func (h *AuthHandler) GithubCallback(c *fiber.Ctx) error {
 	// Clear old session cookie if it exists (migration from old cookie name)
 	c.ClearCookie("session")
 
+	isProd := os.Getenv("NODE_ENV") == "production"
+	sameSite := "Lax"
+	if isProd {
+		sameSite = "None"
+	}
+
 	// Set session cookie
 	c.Cookie(&fiber.Cookie{
 		Name:     "reposa_session",
 		Value:    t,
 		Expires:  time.Now().Add(time.Hour * 72),
-		HTTPOnly: false, // Allow JS access for debugging if needed, but better keep true. identifying issue first.
-		Secure:   false, // Allow HTTP for localhost
-		SameSite: "Lax", // Lax is best for localhost navigation
+		HTTPOnly: true,
+		Secure:   isProd,
+		SameSite: sameSite,
 		Path:     "/",
 	})
 
@@ -177,14 +191,20 @@ func (h *AuthHandler) GetMe(c *fiber.Ctx) error {
 	if err != nil {
 		log.Printf("GetMe: User ID %d not found in DB: %v", userID, err)
 		// Explicitly clear the invalid session cookie with matching attributes
+		isProd := os.Getenv("NODE_ENV") == "production"
+		sameSite := "Lax"
+		if isProd {
+			sameSite = "None"
+		}
+
 		c.Cookie(&fiber.Cookie{
 			Name:     "reposa_session",
 			Value:    "",
 			Expires:  time.Now().Add(-time.Hour), // Expire immediately
 			MaxAge:   -1,
-			HTTPOnly: false,
-			Secure:   false,
-			SameSite: "Lax",
+			HTTPOnly: true,
+			Secure:   isProd,
+			SameSite: sameSite,
 			Path:     "/",
 		})
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "User not found"})

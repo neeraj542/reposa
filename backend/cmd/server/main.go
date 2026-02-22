@@ -40,9 +40,17 @@ func main() {
 	app.Use(logger.New(logger.Config{
 		Format: "[${time}] ${status} - ${latency} ${method} ${path}\n",
 	}))
+	// CORS configuration
+	frontendURL := os.Getenv("FRONTEND_URL")
+	if frontendURL == "" {
+		frontendURL = "http://localhost:5173,http://localhost:5174" // default dev urls
+	}
+
 	app.Use(cors.New(cors.Config{
 		AllowCredentials: true,
-		AllowOrigins:     os.Getenv("FRONTEND_URL"),
+		AllowOrigins:     frontendURL,
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
 	}))
 
 	// Initialize Storage
