@@ -168,7 +168,14 @@ func (h *AuthHandler) GithubCallback(c *fiber.Ctx) error {
 		Path:     "/",
 	})
 
-	return c.Redirect(os.Getenv("FRONTEND_URL"))
+	frontendURL := os.Getenv("FRONTEND_URL")
+	if frontendURL == "" {
+		frontendURL = "http://localhost:5173" // Safe dev fallback
+		log.Println("Warning: FRONTEND_URL not set, defaulting to http://localhost:5173")
+	}
+
+	log.Printf("GithubCallback success: Redirecting user to %s", frontendURL)
+	return c.Redirect(frontendURL)
 }
 
 // Logout clears the session cookie

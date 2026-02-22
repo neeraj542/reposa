@@ -63,7 +63,14 @@ func main() {
 	handler := api.NewHandler(store)
 	authHandler := api.NewAuthHandler(store)
 
-	// Health check endpoint
+	// Root and Health check endpoints
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"status":  "healthy",
+			"message": "Reposa Backend API is running",
+			"version": "1.0.0",
+		})
+	})
 	app.Get("/health", handler.GetHealth)
 
 	// Auth routes
