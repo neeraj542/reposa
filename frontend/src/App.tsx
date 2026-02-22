@@ -12,10 +12,11 @@ import { FiGithub, FiSun, FiMoon, FiClock, FiTarget, FiUsers, FiTrendingUp, FiCo
 import { useTheme } from './contexts/ThemeContext';
 import { useAuth } from './contexts/AuthContext';
 import MobileMenu from './components/MobileMenu';
+import GsocPage from './components/GsocPage';
 import './index.css';
 
 function App() {
-  const [view, setView] = useState<'home' | 'signup' | 'login'>('home');
+  const [view, setView] = useState<'home' | 'signup' | 'login' | 'gsoc' | 'lfx' | 'cncf' | 'others'>('home');
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<{
@@ -147,25 +148,32 @@ function App() {
             {/* Nav Links Center */}
             <div className="hidden lg:flex items-center gap-8">
               <button
-                onClick={() => scrollToSection('features')}
-                className="text-sm font-medium transition-colors duration-200"
-                style={{ color: theme === 'dark' ? '#999999' : '#666666' }}
+                onClick={() => setView('gsoc')}
+                className={`text-sm font-medium transition-colors duration-200 ${view === 'gsoc' ? 'text-black dark:text-white' : ''}`}
+                style={{ color: view === 'gsoc' ? (theme === 'dark' ? '#ffffff' : '#000000') : (theme === 'dark' ? '#999999' : '#666666') }}
               >
-                Features
+                GSOC
               </button>
               <button
-                onClick={() => scrollToSection('benefits')}
-                className="text-sm font-medium transition-colors duration-200"
-                style={{ color: theme === 'dark' ? '#999999' : '#666666' }}
+                onClick={() => setView('lfx')}
+                className={`text-sm font-medium transition-colors duration-200 ${view === 'lfx' ? 'text-black dark:text-white' : ''}`}
+                style={{ color: view === 'lfx' ? (theme === 'dark' ? '#ffffff' : '#000000') : (theme === 'dark' ? '#999999' : '#666666') }}
               >
-                Why Reposa
+                LFX
               </button>
               <button
-                onClick={() => scrollToSection('use-cases')}
-                className="text-sm font-medium transition-colors duration-200"
-                style={{ color: theme === 'dark' ? '#999999' : '#666666' }}
+                onClick={() => setView('cncf')}
+                className={`text-sm font-medium transition-colors duration-200 ${view === 'cncf' ? 'text-black dark:text-white' : ''}`}
+                style={{ color: view === 'cncf' ? (theme === 'dark' ? '#ffffff' : '#000000') : (theme === 'dark' ? '#999999' : '#666666') }}
               >
-                Use Cases
+                CNCF
+              </button>
+              <button
+                onClick={() => setView('others')}
+                className={`text-sm font-medium transition-colors duration-200 ${view === 'others' ? 'text-black dark:text-white' : ''}`}
+                style={{ color: view === 'others' ? (theme === 'dark' ? '#ffffff' : '#000000') : (theme === 'dark' ? '#999999' : '#666666') }}
+              >
+                Others
               </button>
             </div>
 
@@ -322,14 +330,45 @@ function App() {
             <ResultsDisplay analysis={analysis} onBack={() => {
               setAnalysis(null);
               setCurrentRepoName('');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              if (view === 'home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
             }} />
+          </div>
+        )}
+
+        {/* GSoC Page */}
+        {view === 'gsoc' && !analysis && (
+          <GsocPage />
+        )}
+
+        {/* LFX Page */}
+        {view === 'lfx' && !analysis && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center py-24">
+            <h2 className="text-4xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">LFX Mentorship</h2>
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">Ecosystem discovery for Linux Foundation projects coming soon.</p>
+          </div>
+        )}
+
+        {/* CNCF Page */}
+        {view === 'cncf' && !analysis && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center py-24">
+            <h2 className="text-4xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">CNCF Mentoring</h2>
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">Cloud Native project discovery coming soon.</p>
+          </div>
+        )}
+
+        {/* Others Page */}
+        {view === 'others' && !analysis && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center py-24">
+            <h2 className="text-4xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">Other Programs</h2>
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">Discovery for MLH, Outreachy, and more coming soon.</p>
           </div>
         )}
 
         {/* Empty State - Bold E2B-inspired Hero */}
         {
-          !analysis && !error && (
+          view === 'home' && !analysis && !error && (
             <div className="text-center hero-glow animate-fade-in-up py-16 sm:py-24">
               {/* Hero Content */}
               <div className="mb-16">

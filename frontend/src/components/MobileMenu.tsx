@@ -14,9 +14,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onNavigate }) 
     if (!isOpen) return null;
 
     const navItems = [
-        { id: 'features', label: 'Features', icon: FiInfo },
-        { id: 'benefits', label: 'Why Reposa', icon: FiAward },
-        { id: 'use-cases', label: 'Use Cases', icon: FiPieChart },
+        { id: 'gsoc', label: 'GSOC', icon: FiAward },
+        { id: 'lfx', label: 'LFX', icon: FiZap },
+        { id: 'cncf', label: 'CNCF', icon: FiPieChart },
+        { id: 'others', label: 'Others', icon: FiInfo },
     ];
 
     return (
