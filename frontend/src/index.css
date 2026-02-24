@@ -13,9 +13,9 @@
     --text-primary: #18181b;
     --text-secondary: #52525b;
     --text-tertiary: #a1a1aa;
-    --bg-primary: #ffffff;
-    --bg-secondary: #fafafa;
-    --bg-tertiary: #f4f4f5;
+    --bg-primary: #f2f2f4;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #eaeaec;
     --border-primary: #e4e4e7;
 
     /* Kubernetes Blue Palette - Light Mode */
@@ -38,13 +38,18 @@
     --zinc-200: #e4e4e7;
     --zinc-800: #27272a;
     --zinc-900: #18181b;
+
+    /* GSoC Brand Palette */
+    --gsoc-orange: #f58220;
+    --gsoc-blue: #4285f4;
+    --gsoc-blue-dark: #1a73e8;
   }
 
   [data-theme='dark'] {
     /* Kubernetes-Inspired Professional Color System - Dark Theme */
-    --bg-primary: #0a0a0a;
-    --bg-secondary: #18181b;
-    --bg-tertiary: #27272a;
+    --bg-primary: #050506;
+    --bg-secondary: #0e0e11;
+    --bg-tertiary: #18181b;
     --text-primary: #ffffff;
     --text-secondary: #a1a1aa;
     --text-tertiary: #71717a;
@@ -60,9 +65,13 @@
     --gradient-subtle: linear-gradient(135deg, rgba(50, 108, 229, 0.05) 0%, rgba(66, 133, 244, 0.05) 100%);
 
     /* Clean Borders - Minimal */
-    --border-primary: rgba(255, 255, 255, 0.08);
     --border-hover: rgba(50, 108, 229, 0.3);
     --border-focus: #326CE5;
+
+    /* GSoC Brand Palette - Dark Mode */
+    --gsoc-orange: #f58220;
+    --gsoc-blue: #4285f4;
+    --gsoc-blue-dark: #1a73e8;
   }
 
   html.light {
@@ -123,67 +132,69 @@
 
 @layer components {
 
-  /* Minimalist Glass Card - Kubernetes Style */
+  /* Minimalist Glass Card - High Fidelity */
   .glass-card {
-    @apply bg-zinc-900/40 backdrop-blur-xl border rounded-md;
+    @apply backdrop-blur-xl border transition-all duration-500;
     background: var(--bg-secondary);
     border: 1px solid var(--border-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   }
 
   .glass-card:hover {
-    border-color: var(--border-hover);
-    box-shadow: 0 4px 12px rgba(50, 108, 229, 0.12);
-    transform: translateY(-1px);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
   }
 
-  /* Kubernetes-Inspired Button */
+  /* Premium Buttons - Minimalist */
   .btn-primary {
-    @apply font-semibold py-3 px-6 rounded-md transition-all duration-200 text-white;
-    background: var(--gradient-primary);
-    border: none;
-    box-shadow: 0 1px 3px rgba(50, 108, 229, 0.3);
+    @apply font-black py-3 px-6 rounded-xl transition-all duration-300 text-white uppercase tracking-widest text-xs;
+    background: #000000;
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  [data-theme='dark'] .btn-primary {
+    background: #ffffff;
+    color: #000000;
   }
 
   .btn-primary:hover {
-    box-shadow: 0 2px 8px rgba(50, 108, 229, 0.4);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.2);
   }
 
   .btn-secondary {
-    @apply font-semibold py-3 px-6 rounded-md transition-all duration-200;
+    @apply font-black py-3 px-6 rounded-xl transition-all duration-300 uppercase tracking-widest text-xs border;
     background: transparent;
-    border: 1px solid var(--border-primary);
+    border-color: var(--border-primary);
     color: var(--text-primary);
   }
 
   .btn-secondary:hover {
-    border-color: var(--border-hover);
     background: var(--bg-tertiary);
+    border-color: var(--text-secondary);
   }
 
-  /* Clean Input Field - Minimalist */
+  /* Clean Input Field - Premium */
   .input-field {
-    @apply w-full px-4 py-3 rounded-md outline-none transition-all duration-200;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-primary);
+    @apply w-full px-5 py-4 rounded-xl outline-none transition-all duration-300 font-bold;
+    background: transparent;
+    border: 2px solid var(--border-primary);
     color: var(--text-primary);
   }
 
-  .input-field::placeholder {
-    color: var(--text-tertiary);
+  .input-field:focus {
+    border-color: #000000;
+    background: var(--bg-secondary);
   }
 
-  .input-field:focus {
-    border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(50, 108, 229, 0.1);
+  [data-theme='dark'] .input-field:focus {
+    border-color: #ffffff;
   }
 
   /* Professional Badges */
   .badge {
-    @apply inline-flex items-center px-2.5 py-1 rounded-sm text-xs font-medium;
-    letter-spacing: 0.01em;
+    @apply inline-flex items-center px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-[0.1em];
   }
 
   .badge-easy {

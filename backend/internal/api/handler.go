@@ -2,9 +2,12 @@ package api
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/neeraj542/reposa/internal/analyzer"
@@ -150,4 +153,38 @@ func (h *Handler) GetHealth(c *fiber.Ctx) error {
 		"service": "reposa",
 		"version": "1.0.0",
 	})
+}
+
+// GetGsocOrganizations proxies requests to gsocorganizations.dev API
+func (h *Handler) GetGsocOrganizations(c *fiber.Ctx) error {
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+
+	resp, err := client.Get("https://api.gsocorganizations.dev/organizations.json")
+	if err != nil {
+		log.Printf("GSoC API fetch error: %v", err)
+		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
+			"error":   "Failed to fetch GSoC organizations",
+			"message": "The upstream GSoC Organizations API is currently unavailable.",
+		})
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return c.Status(resp.StatusCode).JSON(fiber.Map{
+			"error": "Upstream API error",
+		})
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to read response body",
+		})
+	}
+
+	// Forward the raw JSON to the frontend
+	c.Set("Content-Type", "application/json")
+	return c.Send(body)
 }
