@@ -1,208 +1,256 @@
-# Reposa 🔍
 
-**Reposa** (Repository Analyzer) - Discover contribution opportunities in any GitHub repository instantly.
+# Reposa
 
-## What is Reposa?
+Reposa (Repository Analyzer) is a backend-driven system designed to analyze GitHub repositories on demand and identify structured open-source contribution opportunities.
 
-Reposa analyzes GitHub repositories on-demand to help developers find great opportunities to contribute to open source projects. Simply input a repository URL and get instant insights about:
+The platform evaluates issues, labels, technologies, and repository metadata to generate actionable insights for developers seeking meaningful contributions.
 
-- 🎯 Open issues looking for help
-- 🏷️ Issue categorization (bug, feature, documentation)
-- 📊 Difficulty levels (good first issue, easy, medium, hard)
-- 💻 Required skills and technologies
-- 📝 Contribution guidelines
-- 👥 Maintainer availability
+The design emphasizes structured analysis, API-driven architecture, and scalable backend processing.
 
-## Features
+---
 
-- **On-Demand Analysis**: Analyze any GitHub repository instantly
-- **Smart Categorization**: Automatically categorizes issues by type and difficulty
-- **Skill Matching**: Identifies required programming languages and technologies
-- **Contribution Ready**: Links to contribution guidelines and code of conduct
-- **Fast & Efficient**: Caches results for quick repeated access
+## Overview
 
-## Tech Stack
+Reposa performs dynamic analysis of any public GitHub repository by:
+
+* Fetching repository metadata and issue data via the GitHub API
+* Classifying issues by type and difficulty
+* Extracting technology stack information
+* Identifying contribution readiness signals
+* Aggregating repository statistics
+
+The system is designed for extensibility and performance, with clear separation between API handling, analysis logic, and storage layers.
+
+---
+
+## Core Capabilities
+
+* On-demand repository analysis
+* Issue classification (bug, feature, documentation, enhancement)
+* Difficulty estimation (good first issue, easy, medium, hard)
+* Skill and language extraction
+* Aggregated repository metrics
+* Caching for performance optimization
+* RESTful API interface
+
+---
+
+## System Architecture
 
 ### Backend
-- **Go 1.21+** - Fast, efficient, and reliable
-- **Fiber** - Express-inspired web framework
-- **PostgreSQL** - Robust data storage
-- **GitHub API** - Official GitHub integration
+
+* Go 1.21+
+* Fiber (HTTP framework)
+* PostgreSQL (persistent storage)
+* GitHub REST API integration
+* Layered architecture (API → Analyzer → Storage)
 
 ### Frontend
-- **React 19 + TypeScript** - Modern, type-safe UI
-- **Vitest + RTL** - Modern testing suite
-- **Vite** - Lightning-fast build tool
-- **Tailwind CSS** - Beautiful, responsive design
 
-## Quick Start
+* React 19 with TypeScript
+* Vite build system
+* Tailwind CSS
+* Vitest and React Testing Library
+
+The backend is fully functional and can operate independently of the frontend.
+
+---
+
+## Installation
 
 ### Prerequisites
-- Go 1.21 or higher
-- PostgreSQL 14+
-- GitHub Personal Access Token ([Create one here](https://github.com/settings/tokens))
 
-### Installation
+* Go 1.21 or higher
+* PostgreSQL 14+
+* GitHub Personal Access Token
+
+Verify Go installation:
 
 ```bash
-# Clone the repository
+go version
+```
+
+---
+
+### Clone Repository
+
+```bash
 git clone https://github.com/yourusername/reposa.git
 cd reposa
+```
 
-# Set up backend
+---
+
+### Backend Setup
+
+```bash
 cd backend
 go mod download
+```
 
-# Configure environment
+Create environment configuration:
+
+```bash
 cp .env.example .env
-# Edit .env and add your GitHub token
+```
 
-# Run the server
+Edit `.env` and configure:
+
+* Database connection string
+* GitHub Personal Access Token
+* Server port
+
+---
+
+### Run the Backend
+
+```bash
 go run cmd/server/main.go
 ```
 
-### Usage
+Server will start on the configured port (default: 3000).
 
-```bash
-# Analyze a repository
-curl -X POST http://localhost:3000/api/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"repo_url": "https://github.com/kubernetes/kubernetes"}'
+---
 
-# Get analysis results
-curl http://localhost:3000/api/analysis/{id}
-```
-
-## API Documentation
+## API Usage
 
 ### Analyze Repository
+
 ```http
 POST /api/analyze
 Content-Type: application/json
-
-{
-  "repo_url": "https://github.com/owner/repo"
-}
 ```
 
-**Response:**
+Request body:
+
 ```json
 {
-  "id": "abc123",
-  "repository": {
-    "name": "repo",
-    "owner": "owner",
-    "description": "...",
-    "stars": 1000,
-    "languages": ["Go", "Python"]
-  },
-  "issues": [
-    {
-      "title": "Add feature X",
-      "url": "https://github.com/...",
-      "labels": ["help wanted", "good first issue"],
-      "difficulty": "easy",
-      "type": "feature"
-    }
-  ],
-  "stats": {
-    "total_issues": 10,
-    "good_first_issues": 3,
-    "help_wanted": 7
-  }
+  "repo_url": "https://github.com/owner/repository"
 }
 ```
+
+---
+
+### Retrieve Analysis
+
+```http
+GET /api/analysis/{id}
+```
+
+Example:
+
+```bash
+curl -X POST http://localhost:3000/api/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"repo_url": "https://github.com/kubernetes/kubernetes"}'
+```
+
+Then:
+
+```bash
+curl http://localhost:3000/api/analysis/{id}
+```
+
+---
+
+## Data Model Summary
+
+Analysis response includes:
+
+* Repository metadata
+* Detected programming languages
+* Issue breakdown
+* Difficulty distribution
+* Contribution indicators
+* Statistical summary
+
+The system stores results for reuse and avoids redundant GitHub API calls where possible.
+
+---
 
 ## Project Structure
 
 ```
 reposa/
 ├── backend/
-│   ├── cmd/
-│   │   └── server/          # Main application entry point
+│   ├── cmd/server/          # Application entry point
 │   ├── internal/
-│   │   ├── api/             # HTTP handlers and routes
-│   │   ├── analyzer/        # Core analysis logic
+│   │   ├── api/             # HTTP routing and handlers
+│   │   ├── analyzer/        # Core repository analysis engine
 │   │   ├── github/          # GitHub API client
-│   │   ├── models/          # Data models
+│   │   ├── models/          # Domain models
 │   │   └── storage/         # Database layer
-│   ├── pkg/                 # Public packages
-│   └── config/              # Configuration files
-├── frontend/                # React frontend (coming soon)
+│   ├── config/              # Configuration management
+│   └── pkg/                 # Shared utilities
+├── frontend/                # React frontend
 ├── docs/                    # Documentation
-└── docker-compose.yml       # Docker setup
+└── docker-compose.yml
 ```
+
+The structure follows a layered design for maintainability and testability.
+
+---
 
 ## Development
 
-### Running Tests
+### Run Backend Tests
 
-#### Backend
 ```bash
 cd backend
 go test ./...
 ```
 
-#### Frontend
-```bash
-cd frontend
-npm test
-```
-
 ### Linting
+
 ```bash
 golangci-lint run
 ```
 
-### Building
+### Build Binary
+
 ```bash
 go build -o bin/reposa cmd/server/main.go
 ```
 
-## Contributing
+---
 
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+## Design Considerations
 
-### How to Contribute
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+* Clear separation of concerns
+* API-first architecture
+* Extensible analysis pipeline
+* Structured error handling
+* Rate-limit aware GitHub integration
+* Cached analysis results for performance
+* Minimal coupling between layers
 
-## Roadmap
+The system prioritizes correctness and maintainability over premature optimization.
 
-- [x] Project setup and architecture
-- [x] Core GitHub API integration
-- [x] Issue analysis engine
-- [x] REST API endpoints
-- [x] Database integration
-- [x] Caching layer
-- [x] Frontend UI
-- [x] Search functionality
-- [x] Testing foundation
-- [ ] Docker deployment
-- [ ] CI/CD pipeline
+---
 
-## Inspiration
+## Experimental Extensions
 
-This project was inspired by [CLOTributor](https://clotributor.dev) by CNCF, which helps discover Cloud Native contribution opportunities. Reposa takes a different approach by providing on-demand analysis for any GitHub repository.
+* ML-based issue difficulty classification
+* Maintainer responsiveness scoring
+* Repository health index
+* Contributor skill matching engine
+* Distributed analysis workers
+* Dockerized deployment with CI/CD pipeline
+
+---
 
 ## License
-
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
+---
 ## Acknowledgments
-
 - Thanks to the CNCF team for inspiring this project with CLOTributor
 - GitHub for providing an excellent API
 - The open source community for making this possible
 
-## Contact
+## Contact 
+- **Issues**: [GitHub Issues](https://github.com/neeraj542/reposa/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/neeraj542/reposa/discussions)
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/reposa/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/reposa/discussions)
-
----
-
+--- 
 **Made with ❤️ for the open source community**
