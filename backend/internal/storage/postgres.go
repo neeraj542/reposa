@@ -28,7 +28,12 @@ func NewStorage() (*Storage, error) {
 	}
 
 	// Auto-migrate the schema
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(
+		&models.User{},
+		&models.Program{},
+		&models.ProgramEdition{},
+		&models.Organization{},
+	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to run auto-migration: %w", err)
 	}

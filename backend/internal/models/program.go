@@ -32,14 +32,23 @@ type ProgramEdition struct {
 
 // Organization represents a company or project participating in a program edition
 type Organization struct {
-	ID               uint      `gorm:"primaryKey" json:"id"`
-	ProgramEditionID uint      `gorm:"not null" json:"program_edition_id"`
-	Slug             string    `gorm:"uniqueIndex;not null" json:"slug"`
-	Name             string    `gorm:"not null" json:"name"`
-	Description      string    `json:"description"`
-	LogoURL          string    `json:"logo_url"`
-	WebsiteURL       string    `json:"website_url"`
-	Repositories     []string  `gorm:"type:text[]" json:"repositories"` // List of primary GitHub repo URLs
-	CreatedAt        time.Time `json:"created_at"`
-	UpdatedAt        time.Time `json:"updated_at"`
+	ID               uint   `gorm:"primaryKey" json:"id"`
+	ProgramEditionID uint   `gorm:"index;not null" json:"program_edition_id"` // changed to index for easier lookup
+	Slug             string `gorm:"uniqueIndex;not null" json:"slug"`
+	Name             string `gorm:"not null" json:"name"`
+	Description      string `json:"description"`
+	LogoURL          string `json:"logo_url"`
+	WebsiteURL       string `json:"website_url"`
+
+	// Rich Data for Ecosystem Indexing
+	IsFirstTime   bool   `json:"is_first_time" gorm:"default:false"`
+	Category      string `json:"category" gorm:"index"`
+	Technologies  string `json:"technologies" gorm:"type:text"` // Comma-separated list
+	IdeasURL      string `json:"ideas_url"`
+	GuideURL      string `json:"guide_url"`
+	GitHubOrgName string `json:"github_org_name" gorm:"index"`
+
+	Repositories string    `gorm:"type:text" json:"repositories"` // Comma-separated list of repos
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }

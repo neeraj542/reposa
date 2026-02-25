@@ -130,7 +130,10 @@ func (h *AuthHandler) GithubCallback(c *fiber.Ctx) error {
 
 	err = h.storage.CreateOrUpdateUser(user)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save user in database"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Failed to save user in database",
+			"details": err.Error(),
+		})
 	}
 
 	// Fetch the full user from DB to get the ID
