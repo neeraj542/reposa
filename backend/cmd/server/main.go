@@ -83,6 +83,7 @@ func main() {
 	// API routes
 	apiGroup := app.Group("/api")
 	apiGroup.Post("/analyze", api.OptionalProtected, handler.AnalyzeRepository)
+	apiGroup.Get("/gsoc/organizations", handler.GetGsocOrganizations)
 
 	// Get port from environment or use default
 	port := os.Getenv("PORT")

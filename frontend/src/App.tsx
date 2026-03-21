@@ -12,10 +12,11 @@ import { FiGithub, FiSun, FiMoon, FiClock, FiTarget, FiUsers, FiTrendingUp, FiCo
 import { useTheme } from './contexts/ThemeContext';
 import { useAuth } from './contexts/AuthContext';
 import MobileMenu from './components/MobileMenu';
+import GsocPage from './components/GsocPage';
 import './index.css';
 
 function App() {
-  const [view, setView] = useState<'home' | 'signup' | 'login'>('home');
+  const [view, setView] = useState<'home' | 'signup' | 'login' | 'gsoc' | 'lfx' | 'cncf' | 'others'>('home');
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<{
@@ -24,12 +25,33 @@ function App() {
   } | null>(null);
   const [currentRepoName, setCurrentRepoName] = useState<string>('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const navigate = (newView: 'home' | 'signup' | 'login' | 'gsoc' | 'lfx' | 'cncf' | 'others') => {
+    setView(newView);
+    window.history.pushState({}, '', newView === 'home' ? '/' : `/${newView}`);
+  };
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const path = window.location.pathname.replace('/', '') || 'home';
+      if (['home', 'signup', 'login', 'gsoc', 'lfx', 'cncf', 'others'].includes(path)) {
+        setView(path as any);
+      } else {
+        setView('home');
+        window.history.replaceState({}, '', '/');
+      }
+    };
+
+    handleLocationChange();
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
 
   const resultsRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
-  const { user, logout, loginWithGithub } = useAuth();
+  const { user, logout } = useAuth();
 
   // Smooth scroll function
   const scrollToSection = (id: string) => {
@@ -39,15 +61,13 @@ function App() {
     }
   };
 
-  // Handle outside click for dropdown
+  // Scroll listener for sticky navbar refinement
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsSignInOpen(false);
-      }
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleSearch = async (repoUrl: string) => {
@@ -56,7 +76,7 @@ function App() {
     setAnalysis(null);
 
     if (!user) {
-      setView('login');
+      navigate('login');
       setLoading(false);
       return;
     }
@@ -106,186 +126,126 @@ function App() {
   }, [analysis]);
 
   if (view === 'signup') {
-    return <SignupPage onBack={() => setView('home')} onLogin={() => setView('login')} />;
+    return <SignupPage onBack={() => navigate('home')} onLogin={() => navigate('login')} />;
   }
 
   if (view === 'login') {
-    return <LoginPage onBack={() => setView('home')} onSignup={() => setView('signup')} />;
+    return <LoginPage onBack={() => navigate('home')} onSignup={() => navigate('signup')} />;
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex flex-col" style={{ background: theme === 'dark' ? '#0a0a0a' : '#f4f4f4' }}>
-      {/* Floating Pill Navbar */}
-      <header className="sticky top-0 z-50 py-4">
-        <div className="max-w-7xl mx-auto px-8">
-          <nav
-            className="flex items-center justify-between px-6 py-3 rounded-full transition-all duration-300"
-            style={{
-              background: theme === 'dark' ? '#1a1a1a' : '#ffffff',
-              border: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-              boxShadow: theme === 'dark' ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.04)'
-            }}
-          >
-            {/* Logo Left */}
-            <div className="flex items-center gap-2">
-              <img
-                src="/st1.svg"
-                alt="Reposa"
-                className="w-7 h-7 cursor-pointer hover:scale-110 transition-transform duration-300"
-                style={{ filter: theme === 'light' ? 'brightness(0.8)' : 'none' }}
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              />
-              <span
-                className="font-bold text-lg cursor-pointer"
-                style={{ color: theme === 'dark' ? '#ffffff' : '#000000' }}
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              >
-                Reposa
-              </span>
+    <div className="min-h-screen relative flex flex-col" style={{ background: theme === 'dark' ? '#0a0a0a' : '#f4f4f4' }}>
+      <header className={`fixed top-0 left-0 right-0 z-[100] w-full px-4 sm:px-8 pointer-events-none transition-all duration-500 ${isScrolled ? 'py-3' : 'py-8'}`}>
+        <nav
+          className={`max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl backdrop-blur-3xl border pointer-events-auto transition-all duration-500 ${isScrolled
+            ? 'bg-white/95 dark:bg-zinc-900/95 border-zinc-200 dark:border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_40px_80px_rgba(0,0,0,0.7)]'
+            : 'bg-white/40 dark:bg-zinc-900/40 border-white/20 dark:border-white/5 shadow-none'
+            }`}
+        >
+          {/* Logo Section */}
+          <div className="flex items-center gap-3 sm:gap-10">
+            <button
+              onClick={() => {
+                navigate('home');
+                setAnalysis(null);
+                setError(null);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="group flex items-center gap-2 sm:gap-2.5 transition-all active:scale-95"
+            >
+              <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-zinc-900 dark:bg-zinc-100 flex items-center justify-center group-hover:rotate-[10deg] transition-all duration-300 shadow-lg shadow-zinc-900/10 dark:shadow-none shrink-0">
+                <img src="/st1.svg" alt="Reposa" className="w-4 h-4 sm:w-5 sm:h-5 invert dark:invert-0" />
+              </div>
+              <span className="font-extrabold sm:font-black text-lg sm:text-xl tracking-tight sm:tracking-tighter text-zinc-900 dark:text-zinc-100 uppercase">Reposa</span>
+            </button>
+
+            {/* Nav Links Center - Integrated minimalist design */}
+            <div className="hidden lg:flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100/50 dark:bg-white/5 border border-zinc-200/50 dark:border-white/5">
+              {[
+                { id: 'gsoc', label: 'GSOC' },
+                { id: 'lfx', label: 'LFX' },
+                { id: 'cncf', label: 'CNCF' },
+                { id: 'others', label: 'Others' }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => navigate(item.id as any)}
+                  className={`px-4 py-2 rounded-lg text-xs font-black tracking-widest transition-all duration-200 ${view === item.id
+                    ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black shadow-sm'
+                    : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/50 dark:hover:bg-white/5'
+                    }`}
+                >
+                  {item.label}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Nav Links Center */}
-            <div className="hidden lg:flex items-center gap-8">
-              <button
-                onClick={() => scrollToSection('features')}
-                className="text-sm font-medium transition-colors duration-200"
-                style={{ color: theme === 'dark' ? '#999999' : '#666666' }}
-              >
-                Features
-              </button>
-              <button
-                onClick={() => scrollToSection('benefits')}
-                className="text-sm font-medium transition-colors duration-200"
-                style={{ color: theme === 'dark' ? '#999999' : '#666666' }}
-              >
-                Why Reposa
-              </button>
-              <button
-                onClick={() => scrollToSection('use-cases')}
-                className="text-sm font-medium transition-colors duration-200"
-                style={{ color: theme === 'dark' ? '#999999' : '#666666' }}
-              >
-                Use Cases
-              </button>
-            </div>
+          {/* Right Actions */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-all active:scale-95"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <FiSun size={19} /> : <FiMoon size={19} />}
+            </button>
 
-            {/* CTAs Right */}
-            <div className="flex items-center gap-3">
-              {/* Theme Toggle */}
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-full transition-colors duration-200"
-                style={{
-                  background: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'
-                }}
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? (
-                  <FiSun style={{ color: '#ffffff' }} className="text-lg" />
-                ) : (
-                  <FiMoon style={{ color: '#000000' }} className="text-lg" />
-                )}
-              </button>
-
-              {user ? (
-                <div className="flex items-center gap-3">
-                  <img
-                    src={user.avatar_url}
-                    alt={user.username}
-                    className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10"
-                  />
+            {user ? (
+              <div className="flex items-center gap-2 sm:gap-3 pl-3 sm:pl-4 border-l border-zinc-200/50 dark:border-white/5">
+                <div className="hidden sm:flex flex-col items-end">
+                  <span className="text-[10px] sm:text-xs font-bold sm:font-black text-zinc-900 dark:text-zinc-100 leading-none mb-0.5 sm:mb-1 max-w-[80px] sm:max-w-[120px] truncate">{user.username}</span>
                   <button
                     onClick={logout}
-                    className="hidden sm:block px-5 py-2 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
-                    style={{
-                      background: '#000000',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                    }}
+                    className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] font-bold sm:font-black text-zinc-400 hover:text-rose-500 transition-colors"
                   >
-                    Logout
+                    Sign Out
                   </button>
                 </div>
-              ) : (
-                <div className="relative" ref={dropdownRef}>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setIsSignInOpen(!isSignInOpen)}
-                      className="hidden sm:block px-4 py-2 text-sm font-medium transition-colors duration-200 hover:text-black dark:hover:text-white"
-                      style={{ color: theme === 'dark' ? '#999999' : '#666666' }}
-                    >
-                      Sign In
-                    </button>
-                    <button
-                      onClick={() => setView('signup')}
-                      className="hidden sm:block px-5 py-2 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
-                      style={{
-                        background: '#000000',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                      }}
-                    >
-                      Get Started
-                    </button>
-                  </div>
+                <img
+                  src={user.avatar_url}
+                  alt={user.username}
+                  className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl border border-zinc-200 sm:border-2 sm:border-zinc-100 dark:border-white/10 shadow-sm transition-transform hover:scale-110 shrink-0"
+                />
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => navigate('login')}
+                  className="hidden sm:block px-5 py-2.5 text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-all"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate('signup')}
+                  className="hidden sm:block px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black hover:scale-[1.03] active:scale-[0.98] transition-all shadow-xl shadow-zinc-900/10 dark:shadow-none"
+                >
+                  Get Started
+                </button>
+              </div>
+            )}
 
-                  {isSignInOpen && (
-                    <div
-                      className="absolute right-0 mt-3 w-56 rounded-2xl shadow-2xl overflow-hidden py-2 z-[60] border animate-in fade-in zoom-in duration-200 origin-top-right"
-                      style={{
-                        background: theme === 'dark' ? '#18181b' : '#ffffff',
-                        borderColor: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                        boxShadow: '0 10px 40px -10px rgba(0,0,0,0.3)'
-                      }}
-                    >
+            {/* Mobile Trigger */}
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-zinc-100 dark:bg-white/5 text-zinc-900 dark:text-zinc-100 transition-all active:scale-95 shrink-0"
+            >
+              <FiMenu size={18} className="sm:w-5 sm:h-5" />
+            </button>
+          </div>
+        </nav>
+      </header>
 
-                      <div className="px-4 py-2 border-b mb-1" style={{ borderColor: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
-                        <p className="text-[10px] uppercase tracking-widest font-bold text-gray-500">Sign in to Reposa</p>
-                      </div>
-                      <button
-                        onClick={() => {
-                          loginWithGithub();
-                          setIsSignInOpen(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/5 group"
-                        style={{ color: theme === 'dark' ? '#ffffff' : '#000000' }}
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-white/5 flex items-center justify-center group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                          <FiGithub className="text-lg" />
-                        </div>
-                        <div className="text-left">
-                          <p className="font-semibold">Continue with GitHub</p>
-                          <p className="text-[10px] text-gray-500">Fast & Secure</p>
-                        </div>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Hamburger Menu Mobile */}
-              <button
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 rounded-full transition-colors duration-200"
-                style={{
-                  background: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                  color: theme === 'dark' ? '#ffffff' : '#000000'
-                }}
-                aria-label="Open menu"
-              >
-                <FiMenu className="text-xl" />
-              </button>
-            </div>
-          </nav >
-        </div >
-      </header >
-
-      {/* Mobile Navigation Backdrop & Overlay */}
-      < MobileMenu
+      {/* Spacer for Fixed Header */}
+      <div className="h-24 sm:h-32" />
+      <MobileMenu
         isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)
-        }
+        onClose={() => setIsMobileMenuOpen(false)}
         onNavigate={(id) => {
-          if (id === 'signup') {
-            setView('signup');
+          if (id === 'gsoc' || id === 'lfx' || id === 'cncf' || id === 'others') {
+            navigate(id as any);
+          } else if (id === 'signup') {
+            navigate('signup');
           } else {
             scrollToSection(id);
           }
@@ -293,7 +253,7 @@ function App() {
       />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-16 flex-grow">
+      <main className="max-w-7xl w-full mx-auto px-4 sm:px-8 py-12 sm:py-16 flex-grow overflow-x-hidden">
 
 
         {/* Error Display */}
@@ -322,14 +282,45 @@ function App() {
             <ResultsDisplay analysis={analysis} onBack={() => {
               setAnalysis(null);
               setCurrentRepoName('');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              if (view === 'home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
             }} />
+          </div>
+        )}
+
+        {/* GSoC Page */}
+        {view === 'gsoc' && !analysis && (
+          <GsocPage />
+        )}
+
+        {/* LFX Page */}
+        {view === 'lfx' && !analysis && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center py-24">
+            <h2 className="text-4xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">LFX Mentorship</h2>
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">Ecosystem discovery for Linux Foundation projects coming soon.</p>
+          </div>
+        )}
+
+        {/* CNCF Page */}
+        {view === 'cncf' && !analysis && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center py-24">
+            <h2 className="text-4xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">CNCF Mentoring</h2>
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">Cloud Native project discovery coming soon.</p>
+          </div>
+        )}
+
+        {/* Others Page */}
+        {view === 'others' && !analysis && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center py-24">
+            <h2 className="text-4xl font-bold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">Other Programs</h2>
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">Discovery for MLH, Outreachy, and more coming soon.</p>
           </div>
         )}
 
         {/* Empty State - Bold E2B-inspired Hero */}
         {
-          !analysis && !error && (
+          view === 'home' && !analysis && !error && (
             <div className="text-center hero-glow animate-fade-in-up py-16 sm:py-24">
               {/* Hero Content */}
               <div className="mb-16">
